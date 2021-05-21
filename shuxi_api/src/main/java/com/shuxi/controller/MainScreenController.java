@@ -22,25 +22,40 @@ import java.util.List;
 public class MainScreenController {
     @Autowired
     private ITdmShipTonnageDistributionDfService tdmShipTonnageDistributionDfService;
+    //西江流域（近一月）船舶吨位分布图
     @GetMapping("/valleyShipTonDistributing")
-    public String valleyShipTonDistributing() throws JSONException {
-        List<TdmShipTonnageDistributionDf> tdmShipTonnageDistributionDfs = tdmShipTonnageDistributionDfService.list();
-        JSONArray jsonArray = new JSONArray();
-        JSONArray jsonArray1 = new JSONArray();
-        jsonArray1.put("label");
-        jsonArray1.put("value");
-        jsonArray1.put("radius");
-        jsonArray.put(jsonArray1);
-        for (TdmShipTonnageDistributionDf tdmShipTonnageDistributionDf : tdmShipTonnageDistributionDfs) {
-            JSONArray jsonArray2 = new JSONArray();
-            jsonArray2.put(tdmShipTonnageDistributionDf.getShipTonnage());
-            jsonArray2.put(1);
-            jsonArray2.put(Double.parseDouble(tdmShipTonnageDistributionDf.getProportion()));
-            jsonArray.put(jsonArray2);
+    public String valleyShipTonDistributing() {
+        try {
+            List<TdmShipTonnageDistributionDf> tdmShipTonnageDistributionDfs = tdmShipTonnageDistributionDfService.list();
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("label");
+            jsonArray1.put("value");
+            jsonArray1.put("radius");
+            jsonArray.put(jsonArray1);
+            for (TdmShipTonnageDistributionDf tdmShipTonnageDistributionDf : tdmShipTonnageDistributionDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmShipTonnageDistributionDf.getShipTonnage());
+                jsonArray2.put(1);
+                jsonArray2.put(Double.parseDouble(tdmShipTonnageDistributionDf.getProportion()));
+                jsonArray.put(jsonArray2);
+            }
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (Exception e) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","获取数据失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
         }
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("success",true);
-        jsonObject.put("content",jsonArray);
-        return jsonObject.toString();
     }
+
+
+
 }
