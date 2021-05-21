@@ -14,6 +14,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>shuxi_api</module>
+        <module>code_generator</module>
     </modules>
 
 
