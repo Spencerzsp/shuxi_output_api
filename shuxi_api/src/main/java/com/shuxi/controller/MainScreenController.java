@@ -77,7 +77,7 @@ public class MainScreenController {
         }
     }
     //货运周指数(流域)
-    @RequestMapping("/capacityWeekIndexByValley")
+    @RequestMapping("/freightWeeklyIndexByValley")
     public String capacityWeekIndexByValley(@RequestParam String valley){
         QueryWrapper<TdmXjMainLineFreightRateDf> queryWrapper = new QueryWrapper<TdmXjMainLineFreightRateDf>().eq("target", "流域").eq("target_name",valley);
         List<TdmXjMainLineFreightRateDf> tdmXjMainLineFreightRateDfs = tdmXjMainLineFreightRateDfService.list(queryWrapper);
@@ -121,7 +121,7 @@ public class MainScreenController {
         }
     }
     //货运周指数(船闸)
-    @RequestMapping("/capacityWeekIndexByShipLock")
+    @RequestMapping("/freightWeeklyIndexByShipLock")
     public String capacityWeekIndexByShipLock(@RequestParam String shipLock){
         QueryWrapper<TdmXjMainLineFreightRateDf> queryWrapper = new QueryWrapper<TdmXjMainLineFreightRateDf>().eq("target", "船闸").eq("target_name",shipLock);
         List<TdmXjMainLineFreightRateDf> tdmXjMainLineFreightRateDfs = tdmXjMainLineFreightRateDfService.list(queryWrapper);
@@ -293,15 +293,27 @@ public class MainScreenController {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
+            JSONObject jsonObject1 = new JSONObject();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("一级分类");
+            jsonObject1.put("keys",jsonArray1);
+            JSONArray jsonArray2 = new JSONArray();
+            jsonArray2.put("一级分类");
+            jsonObject1.put("activeKeys",jsonArray2);
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("一级分类","流域");
+            jsonObject1.put("defaultOptions",jsonObject2);
+
             JSONArray jsonArray = new JSONArray();
-            jsonArray.put("流域");
-            jsonArray.put("右江");
-            jsonArray.put("郁江");
-            jsonArray.put("浔江");
-            jsonArray.put("柳江");
-            jsonArray.put("黔江");
-            jsonArray.put("红水河");
-            jsonObject.put("content",jsonArray);
+
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","右江").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","郁江").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","浔江").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","柳江").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","黔江").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","红水河").put("value",new JSONObject())));
+            jsonObject1.put("data",jsonArray);
+            jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -322,23 +334,35 @@ public class MainScreenController {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
+            JSONObject jsonObject1 = new JSONObject();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("一级分类");
+            jsonObject1.put("keys",jsonArray1);
+            JSONArray jsonArray2 = new JSONArray();
+            jsonArray2.put("一级分类");
+            jsonObject1.put("activeKeys",jsonArray2);
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("一级分类","城市");
+            jsonObject1.put("defaultOptions",jsonObject2);
+
             JSONArray jsonArray = new JSONArray();
-            jsonArray.put("城市");
-            jsonArray.put("南宁");
-            jsonArray.put("柳州");
-            jsonArray.put("桂林");
-            jsonArray.put("梧州");
-            jsonArray.put("北海");
-            jsonArray.put("防城港");
-            jsonArray.put("钦州");
-            jsonArray.put("贵港");
-            jsonArray.put("玉林");
-            jsonArray.put("百色");
-            jsonArray.put("贺州");
-            jsonArray.put("河池");
-            jsonArray.put("来宾");
-            jsonArray.put("崇左");
-            jsonObject.put("content",jsonArray);
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","南宁").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","柳州").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","桂林").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","梧州").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","北海").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","防城港").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","钦州").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","贵港").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","玉林").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","百色").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","贺州").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","河池").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","来宾").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","崇左").put("value",new JSONObject())));
+
+            jsonObject1.put("data",jsonArray);
+            jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -360,21 +384,34 @@ public class MainScreenController {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
+            JSONObject jsonObject1 = new JSONObject();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("一级分类");
+            jsonObject1.put("keys",jsonArray1);
+            JSONArray jsonArray2 = new JSONArray();
+            jsonArray2.put("一级分类");
+            jsonObject1.put("activeKeys",jsonArray2);
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("一级分类","船闸");
+            jsonObject1.put("defaultOptions",jsonObject2);
+
             JSONArray jsonArray = new JSONArray();
-            jsonArray.put("船闸");
-            jsonArray.put("那吉");
-            jsonArray.put("老口");
-            jsonArray.put("长洲");
-            jsonArray.put("贵港");
-            jsonArray.put("桂平");
-            jsonArray.put("金鸡");
-            jsonArray.put("红花");
-            jsonArray.put("西津");
-            jsonArray.put("大藤峡");
-            jsonArray.put("鱼梁");
-            jsonArray.put("邕宁");
-            jsonArray.put("桥巩");
-            jsonObject.put("content",jsonArray);
+
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","那吉").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","老口").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","长洲").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","贵港").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","桂平").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","金鸡").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","红花").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","西津").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","大藤峡").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","鱼梁").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","邕宁").put("value",new JSONObject())));
+            jsonArray.put(new JSONObject().put("一级分类",new JSONObject().put("key","桥巩").put("value",new JSONObject())));
+
+            jsonObject1.put("data",jsonArray);
+            jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
             JSONObject jsonObject = new JSONObject();
@@ -390,7 +427,7 @@ public class MainScreenController {
 
 
     //运力周指数(流域)
-    @RequestMapping("/freightWeeklyIndexByValley")
+    @RequestMapping("/capacityWeekIndexByValley")
     public String freightWeeklyIndexByValley(@RequestParam String valley){
         QueryWrapper<TdmXjTransportCapacityWeekRate> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("target","流域").eq("target_name",valley).orderByDesc("year").orderByDesc("week_count").last("limit 0,9");
@@ -426,7 +463,7 @@ public class MainScreenController {
     }
 
     //运力周指数(船闸)
-    @RequestMapping("/freightWeeklyIndexByShipLock")
+    @RequestMapping("/capacityWeekIndexByShipLock")
     public String freightWeeklyIndexByShipLock(@RequestParam String shipLock){
         QueryWrapper<TdmXjTransportCapacityWeekRate> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("target","船闸").eq("target_name",shipLock).orderByDesc("year").orderByDesc("week_count").last("limit 0,9");
