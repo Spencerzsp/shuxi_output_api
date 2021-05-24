@@ -430,7 +430,7 @@ public class MainScreenController {
     @RequestMapping("/capacityWeekIndexByValley")
     public String freightWeeklyIndexByValley(@RequestParam String valley){
         QueryWrapper<TdmXjTransportCapacityWeekRate> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("target","流域").eq("target_name",valley).orderByDesc("year").orderByDesc("week_count").last("limit 0,9");
+        queryWrapper.eq("target","流域").eq("target_name",valley).orderByDesc("year_increase").orderByDesc("week_count").last("limit 0,9");
         List<TdmXjTransportCapacityWeekRate> tdmXjTransportCapacityWeekRates = tdmXjTransportCapacityWeekRateService.list(queryWrapper);
         try {
             JSONObject jsonObject = new JSONObject();
