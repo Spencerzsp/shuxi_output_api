@@ -1,6 +1,7 @@
 package com.shuxi.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shuxi.dto.TdmThisYearShipLockageTypeDfDTO;
 import com.shuxi.entity.TdmThisYearShipLockageTypeDf;
 
 /**
@@ -12,5 +13,5 @@ import com.shuxi.entity.TdmThisYearShipLockageTypeDf;
  * @since 2021-05-21
  */
 public interface ITdmThisYearShipLockageTypeDfService extends IService<TdmThisYearShipLockageTypeDf> {
-
+    TdmThisYearShipLockageTypeDfDTO getTdmThisYearShipLockageTypeDfDTO();
 }

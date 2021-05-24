@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shuxi.mapper.TdmThisYearShipLockageTypeDfMapper">
-
+    <select id="getThisYearBdLockageCount" resultType="com.shuxi.entity.TdmThisYearShipLockageTypeDf">
+        select show_type,sum(bd_lockage_count),sum(ck_lockage_count),sum(totoal_lockage_count) from tdm_this_year_ship_lockage_type_df group by show_type;
+    </select>
 </mapper>

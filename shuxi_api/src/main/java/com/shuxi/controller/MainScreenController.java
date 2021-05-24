@@ -2,12 +2,9 @@ package com.shuxi.controller;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.shuxi.entity.TdmRecentYearGateDf;
-import com.shuxi.entity.TdmShipTonnageDistributionDf;
-import com.shuxi.entity.TdmXjMainLineFreightRateDf;
-import com.shuxi.service.ITdmRecentYearGateDfService;
-import com.shuxi.service.ITdmShipTonnageDistributionDfService;
-import com.shuxi.service.ITdmXjMainLineFreightRateDfService;
+import com.shuxi.dto.TdmThisYearShipLockageTypeDfDTO;
+import com.shuxi.entity.*;
+import com.shuxi.service.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +32,17 @@ public class MainScreenController {
     private ITdmXjMainLineFreightRateDfService tdmXjMainLineFreightRateDfService;
     @Autowired
     private ITdmRecentYearGateDfService tdmRecentYearGateDfService;
+    @Autowired
+    private ITdmXjTransportCapacityWeekRateService tdmXjTransportCapacityWeekRateService;
+    @Autowired
+    private ITdmWaterShipAmountDfService tdmWaterShipAmountDfService;
+    @Autowired
+    private ITdmBeidouOperationDataDfService tdmBeidouOperationDataDfService;
+    @Autowired
+    private ITdmBeidouShipAmountDfService tdmBeidouShipAmountDfService;
+    @Autowired
+    private ITdmThisYearShipLockageTypeDfService tdmThisYearShipLockageTypeDfService;
+
     //西江流域（近一月）船舶吨位分布图
     @GetMapping("/valleyShipTonDistributing")
     public String valleyShipTonDistributing() {
@@ -68,7 +76,7 @@ public class MainScreenController {
             return jsonObject.toString();
         }
     }
-    //运力周指数(流域)
+    //货运周指数(流域)
     @RequestMapping("/capacityWeekIndexByValley")
     public String capacityWeekIndexByValley(@RequestParam String valley){
         QueryWrapper<TdmXjMainLineFreightRateDf> queryWrapper = new QueryWrapper<TdmXjMainLineFreightRateDf>().eq("target", "流域").eq("target_name",valley);
@@ -87,12 +95,16 @@ public class MainScreenController {
             jsonArray1.put("年月");
             jsonArray1.put("上行指数");
             jsonArray1.put("下行指数");
+            jsonArray1.put("上行装载率");
+            jsonArray1.put("下行装载率");
             jsonArray.put(jsonArray1);
             for (TdmXjMainLineFreightRateDf tdmXjMainLineFreightRateDf : tdmXjMainLineFreightRateDfs) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmXjMainLineFreightRateDf.getMonthDate());
                 jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getUpRate()));
                 jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getDownRate()));
+                jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getUpLoadingRate()));
+                jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getDownLoadingRate()));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -108,7 +120,7 @@ public class MainScreenController {
             return jsonObject.toString();
         }
     }
-    //运力周指数(船闸)
+    //货运周指数(船闸)
     @RequestMapping("/capacityWeekIndexByShipLock")
     public String capacityWeekIndexByShipLock(@RequestParam String shipLock){
         QueryWrapper<TdmXjMainLineFreightRateDf> queryWrapper = new QueryWrapper<TdmXjMainLineFreightRateDf>().eq("target", "船闸").eq("target_name",shipLock);
@@ -127,12 +139,16 @@ public class MainScreenController {
             jsonArray1.put("年月");
             jsonArray1.put("上行指数");
             jsonArray1.put("下行指数");
+            jsonArray1.put("上行装载率");
+            jsonArray1.put("下行装载率");
             jsonArray.put(jsonArray1);
             for (TdmXjMainLineFreightRateDf tdmXjMainLineFreightRateDf : tdmXjMainLineFreightRateDfs) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmXjMainLineFreightRateDf.getMonthDate());
                 jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getUpRate()));
                 jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getDownRate()));
+                jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getUpLoadingRate()));
+                jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getDownLoadingRate()));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -361,7 +377,6 @@ public class MainScreenController {
             jsonObject.put("content",jsonArray);
             return jsonObject.toString();
         } catch (JSONException e) {
-            e.printStackTrace();
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("success",false);
@@ -374,4 +389,341 @@ public class MainScreenController {
     }
 
 
+    //运力周指数(流域)
+    @RequestMapping("/freightWeeklyIndexByValley")
+    public String freightWeeklyIndexByValley(@RequestParam String valley){
+        QueryWrapper<TdmXjTransportCapacityWeekRate> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("target","流域").eq("target_name",valley).orderByDesc("year").orderByDesc("week_count").last("limit 0,9");
+        List<TdmXjTransportCapacityWeekRate> tdmXjTransportCapacityWeekRates = tdmXjTransportCapacityWeekRateService.list(queryWrapper);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("年份-周数");
+            jsonArray1.put("上行指数");
+            jsonArray1.put("下行指数");
+            for (TdmXjTransportCapacityWeekRate tdmXjTransportCapacityWeekRate : tdmXjTransportCapacityWeekRates) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmXjTransportCapacityWeekRate.getYearIncrease()+"-"+tdmXjTransportCapacityWeekRate.getWeekCount());
+                jsonArray2.put(tdmXjTransportCapacityWeekRate.getUpRate());
+                jsonArray2.put(tdmXjTransportCapacityWeekRate.getDownRate());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+           // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+    //运力周指数(船闸)
+    @RequestMapping("/freightWeeklyIndexByShipLock")
+    public String freightWeeklyIndexByShipLock(@RequestParam String shipLock){
+        QueryWrapper<TdmXjTransportCapacityWeekRate> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("target","船闸").eq("target_name",shipLock).orderByDesc("year").orderByDesc("week_count").last("limit 0,9");
+        List<TdmXjTransportCapacityWeekRate> tdmXjTransportCapacityWeekRates = tdmXjTransportCapacityWeekRateService.list(queryWrapper);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("年份-周数");
+            jsonArray1.put("上行指数");
+            jsonArray1.put("下行指数");
+            for (TdmXjTransportCapacityWeekRate tdmXjTransportCapacityWeekRate : tdmXjTransportCapacityWeekRates) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmXjTransportCapacityWeekRate.getYearIncrease()+"-"+tdmXjTransportCapacityWeekRate.getWeekCount());
+                jsonArray2.put(tdmXjTransportCapacityWeekRate.getUpRate());
+                jsonArray2.put(tdmXjTransportCapacityWeekRate.getDownRate());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+    //西江近年（历年整年）水运发货量(流域)
+    @RequestMapping("/waterTransportationShipmentvolumeInRecentYearsByValley")
+    public String waterTransportationShipmentvolumeInRecentYearsByValley(@RequestParam String valley){
+        QueryWrapper<TdmWaterShipAmountDf> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("target","流域").eq("target_name",valley);
+        try {
+            List<TdmWaterShipAmountDf> tdmWaterShipAmountDfs = tdmWaterShipAmountDfService.list(queryWrapper);
+            JSONObject jsonObject = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("发货量");
+            jsonArray1.put("广西发");
+            jsonArray1.put("广东发");
+            jsonArray1.put("艘次");
+            jsonArray.put(jsonArray1);
+            for (TdmWaterShipAmountDf tdmWaterShipAmountDf : tdmWaterShipAmountDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmWaterShipAmountDf.getCountYear());
+                jsonArray2.put(tdmWaterShipAmountDf.getShipment());
+                jsonArray2.put(tdmWaterShipAmountDf.getGxShipment());
+                jsonArray2.put(tdmWaterShipAmountDf.getGdShipment());
+                jsonArray2.put(tdmWaterShipAmountDf.getCzCount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+
+    }
+
+
+    //西江近年（历年整年）水运发货量(船闸)
+    @RequestMapping("/waterTransportationShipmentvolumeInRecentYearsByShipLock")
+    public String waterTransportationShipmentvolumeInRecentYearsByShipLock(@RequestParam String shipLock){
+        QueryWrapper<TdmWaterShipAmountDf> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("target","流域").eq("target_name",shipLock);
+        try {
+            List<TdmWaterShipAmountDf> tdmWaterShipAmountDfs = tdmWaterShipAmountDfService.list(queryWrapper);
+            JSONObject jsonObject = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("发货量");
+            jsonArray1.put("广西发");
+            jsonArray1.put("广东发");
+            jsonArray1.put("艘次");
+            jsonArray.put(jsonArray1);
+            for (TdmWaterShipAmountDf tdmWaterShipAmountDf : tdmWaterShipAmountDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmWaterShipAmountDf.getCountYear());
+                jsonArray2.put(tdmWaterShipAmountDf.getShipment());
+                jsonArray2.put(tdmWaterShipAmountDf.getGxShipment());
+                jsonArray2.put(tdmWaterShipAmountDf.getGdShipment());
+                jsonArray2.put(tdmWaterShipAmountDf.getCzCount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+
+    }
+
+    //指标
+    //经常过闸船舶
+    @RequestMapping("/oftenLockageShipCount")
+    public String oftenLockageShipCount(){
+        List<TdmBeidouOperationDataDf> tdmBeidouOperationDataDfs = tdmBeidouOperationDataDfService.list();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("经常过闸船舶数");
+            for (TdmBeidouOperationDataDf tdmBeidouOperationDataDf : tdmBeidouOperationDataDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmBeidouOperationDataDf.getOftenLockageShipCount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+
+    }
+    //北斗船舶数
+    @RequestMapping("/beidouShipAmountDf")
+    public String beidouShipAmountDf(){
+        List<TdmBeidouShipAmountDf> tdmBeidouShipAmountDfs = tdmBeidouShipAmountDfService.list();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("北斗船舶");
+            for (TdmBeidouShipAmountDf tdmBeidouShipAmountDf : tdmBeidouShipAmountDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmBeidouShipAmountDf.getAmount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+    //经常过闸船舶运力
+    @RequestMapping("/oftenLockageTransportCapacity")
+    public String oftenLockageTransportCapacity(){
+        List<TdmBeidouOperationDataDf> tdmBeidouOperationDataDfs = tdmBeidouOperationDataDfService.list();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("经常过闸船舶运力");
+            for (TdmBeidouOperationDataDf tdmBeidouOperationDataDf : tdmBeidouOperationDataDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmBeidouOperationDataDf.getOftenLockageTransportCapacity());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+
+    }
+
+
+    //北斗船舶运力
+    @RequestMapping("/beidouShipShipment")
+    public String beidouShipShipment(){
+        List<TdmBeidouShipAmountDf> tdmBeidouShipAmountDfs = tdmBeidouShipAmountDfService.list();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("北斗船舶运力");
+            for (TdmBeidouShipAmountDf tdmBeidouShipAmountDf : tdmBeidouShipAmountDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmBeidouShipAmountDf.getShipment());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+    //本年北斗船舶报闸
+    @RequestMapping("/thisYearBdLockageCount")
+    public String thisYearBdLockageCount(){
+        TdmThisYearShipLockageTypeDfDTO tdmThisYearShipLockageTypeDfDTO = tdmThisYearShipLockageTypeDfService.getTdmThisYearShipLockageTypeDfDTO();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("2021年北斗报闸");
+            jsonArray.put(jsonArray1);
+            JSONArray jsonArray2 = new JSONArray();
+            jsonArray2.put(tdmThisYearShipLockageTypeDfDTO.getBdLockageCount());
+            jsonArray.put(jsonArray2);
+            jsonObject.put("content",jsonObject);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+
+    }
+
+    //2021年窗口登记
+    @RequestMapping("/thisYearCkLockageCount")
+    public String thisYearCkLockageCount(){
+        TdmThisYearShipLockageTypeDfDTO tdmThisYearShipLockageTypeDfDTO = tdmThisYearShipLockageTypeDfService.getTdmThisYearShipLockageTypeDfDTO();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("2021年北斗报闸");
+            jsonArray.put(jsonArray1);
+            JSONArray jsonArray2 = new JSONArray();
+            jsonArray2.put(tdmThisYearShipLockageTypeDfDTO.getCkLockageCount());
+            jsonArray.put(jsonArray2);
+            jsonObject.put("content",jsonObject);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+
+    }
+
+
 }
+

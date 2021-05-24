@@ -1,9 +1,11 @@
 package com.shuxi.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shuxi.dto.TdmThisYearShipLockageTypeDfDTO;
 import com.shuxi.entity.TdmThisYearShipLockageTypeDf;
 import com.shuxi.mapper.TdmThisYearShipLockageTypeDfMapper;
 import com.shuxi.service.ITdmThisYearShipLockageTypeDfService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +18,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TdmThisYearShipLockageTypeDfServiceImpl extends ServiceImpl<TdmThisYearShipLockageTypeDfMapper, TdmThisYearShipLockageTypeDf> implements ITdmThisYearShipLockageTypeDfService {
-
+    @Autowired
+    private TdmThisYearShipLockageTypeDfMapper tdmThisYearShipLockageTypeDfMapper;
+    @Override
+    public TdmThisYearShipLockageTypeDfDTO getTdmThisYearShipLockageTypeDfDTO() {
+        return tdmThisYearShipLockageTypeDfMapper.getThisYearBdLockageCount();
+    }
 }
