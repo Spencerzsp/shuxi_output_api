@@ -101,16 +101,16 @@ public class MainScreenController {
             jsonArray1.put("年月");
             jsonArray1.put("上行指数");
             jsonArray1.put("下行指数");
-            jsonArray1.put("上行装载率");
-            jsonArray1.put("下行装载率");
+            //jsonArray1.put("上行装载率");
+            //jsonArray1.put("下行装载率");
             jsonArray.put(jsonArray1);
             for (TdmXjMainLineFreightRateDf tdmXjMainLineFreightRateDf : tdmXjMainLineFreightRateDfs) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmXjMainLineFreightRateDf.getMonthDate());
                 jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getUpRate()));
                 jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getDownRate()));
-                jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getUpLoadingRate()));
-                jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getDownLoadingRate()));
+                //jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getUpLoadingRate()));
+                //jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getDownLoadingRate()));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -145,16 +145,16 @@ public class MainScreenController {
             jsonArray1.put("年月");
             jsonArray1.put("上行指数");
             jsonArray1.put("下行指数");
-            jsonArray1.put("上行装载率");
-            jsonArray1.put("下行装载率");
+            //jsonArray1.put("上行装载率");
+            //jsonArray1.put("下行装载率");
             jsonArray.put(jsonArray1);
             for (TdmXjMainLineFreightRateDf tdmXjMainLineFreightRateDf : tdmXjMainLineFreightRateDfs) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmXjMainLineFreightRateDf.getMonthDate());
                 jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getUpRate()));
                 jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getDownRate()));
-                jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getUpLoadingRate()));
-                jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getDownLoadingRate()));
+                //jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getUpLoadingRate()));
+                //jsonArray2.put(Double.parseDouble(tdmXjMainLineFreightRateDf.getDownLoadingRate()));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -664,7 +664,7 @@ public class MainScreenController {
             jsonObject1.put("label","北斗船舶");
             for (TdmBeidouShipAmountDf tdmBeidouShipAmountDf : tdmBeidouShipAmountDfs) {
                 jsonObject1.put("value",tdmBeidouShipAmountDf.getAmount());
-                jsonObject.put("unit","艘次");
+                jsonObject1.put("unit","艘次");
             }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
@@ -753,7 +753,7 @@ public class MainScreenController {
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
-            // e.printStackTrace();
+             e.printStackTrace();
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("success",false);
@@ -774,7 +774,7 @@ public class MainScreenController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("label","2021年北斗报闸");
+            jsonObject1.put("label","2021年窗口登记");
             jsonObject1.put("value",tdmThisYearShipLockageTypeDfDTO.getCkLockageCount());
             jsonObject1.put("unit","次");
             jsonObject.put("content",jsonObject1);
@@ -792,7 +792,7 @@ public class MainScreenController {
         }
 
     }
-    //上周货运指数
+    //上周运力指数
     @RequestMapping("/lastWeekCapacityRate")
     public String lastWeekCapacityRate(){
         try {
@@ -916,10 +916,10 @@ public class MainScreenController {
 
     //热门货物top10(抵达城市)
     @RequestMapping("/hotGoodsTop10ByArrCity")
-    public String hotGoodsTop10ByArrCity(@RequestParam String ArrCity){
+    public String hotGoodsTop10ByArrCity(@RequestParam String arrCity){
         QueryWrapper<TdmHotGoodsTop10> queryWrapper = new QueryWrapper<>();
         try {
-            queryWrapper.eq("target","抵达城市").eq("target_name",ArrCity);
+            queryWrapper.eq("target","抵达城市").eq("target_name",arrCity);
             List<TdmHotGoodsTop10> tdmHotGoodsTop10s = tdmHotGoodsTop10Service.list(queryWrapper);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
@@ -949,7 +949,7 @@ public class MainScreenController {
         }
     }
 
-    //热门货物top10(抵达城市)
+    //热门货物top10(出发城市)
     @RequestMapping("/hotGoodsTop10ByDrptCity")
     public String hotGoodsTop10ByDrptCity(@RequestParam String drptCity){
         QueryWrapper<TdmHotGoodsTop10> queryWrapper = new QueryWrapper<>();
@@ -1170,7 +1170,7 @@ public class MainScreenController {
 
 
     //中心的图
-    //艘次
+    //过闸费
     @RequestMapping("/ShiplockPassDateByGateFee")
     public String xjLockageInfoByGateFee(){
         try {
