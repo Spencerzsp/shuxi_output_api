@@ -1,12 +1,12 @@
 package com.shuxi.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.shuxi.dto.TdmThisYearEachShiplockForecastDfDTO;
 import com.shuxi.entity.TdmEachShiplockLockageDf;
 import com.shuxi.entity.TdmRecentYearLockageYearIncreaseDf;
+import com.shuxi.entity.TdmShipGateWayCountDf;
 import com.shuxi.entity.TdmThisYearEachMonthLockageDf;
-import com.shuxi.service.ITdmEachShiplockLockageDfService;
-import com.shuxi.service.ITdmRecentYearLockageYearIncreaseDfService;
-import com.shuxi.service.ITdmThisYearEachMonthLockageDfService;
+import com.shuxi.service.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class SecondScreenController {
@@ -27,6 +28,8 @@ public class SecondScreenController {
     private ITdmThisYearEachMonthLockageDfService tdmThisYearEachMonthLockageDfService;
     @Autowired
     private ITdmRecentYearLockageYearIncreaseDfService tdmRecentYearLockageYearIncreaseDfService;
+    @Autowired
+    private ITdmThisYearEachShiplockForecastDfService tdmThisYearEachShiplockForecastDfService;
     //本年船闸过闸数据
     @RequestMapping("/thisYearShipLockageByShipLock")
     public String thisYearShipLockageByShipLock(){
@@ -191,6 +194,129 @@ public class SecondScreenController {
             return jsonObject.toString();
         }
     }
+
+
+    //各船闸本年预测过闸数据
+    @RequestMapping("/thisYearForecast")
+    public String thisYearForecast(){
+        try {
+            List<TdmThisYearEachShiplockForecastDfDTO> forecastAndActual = tdmThisYearEachShiplockForecastDfService.getForecastAndActual();
+            List<TdmThisYearEachShiplockForecastDfDTO> tdmThisYearEachShiplockForecastDfDTOS = forecastAndActual.stream().filter(tdmThisYearEachShiplockForecastDfDTO -> {
+                return tdmThisYearEachShiplockForecastDfDTO.getShowType().equals("本年") ? true : false;
+            })
+                    .collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("预测过闸");
+            jsonArray1.put("实际过闸");
+            jsonArray.put(jsonArray1);
+            for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastCzCount());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualCzCount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+    //各船闸本月预测过闸数据
+    @RequestMapping("/thisMonthForecast")
+    public String thisMonthForecast(){
+        try {
+            List<TdmThisYearEachShiplockForecastDfDTO> forecastAndActual = tdmThisYearEachShiplockForecastDfService.getForecastAndActual();
+            List<TdmThisYearEachShiplockForecastDfDTO> tdmThisYearEachShiplockForecastDfDTOS = forecastAndActual.stream().filter(tdmThisYearEachShiplockForecastDfDTO -> {
+                return tdmThisYearEachShiplockForecastDfDTO.getShowType().equals("本月") ? true : false;
+            })
+                    .collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("预测过闸");
+            jsonArray1.put("实际过闸");
+            jsonArray.put(jsonArray1);
+            for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastCzCount());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualCzCount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+    //船舶报道方式统计
+    //tdm_ship_gate_way_count_df
+    @Autowired
+    private ITdmShipGateWayCountDfService tdmShipGateWayCountDfService;
+    @RequestMapping("/shipgateWayCount")
+    public String shipgateWayCount(){//总览后续可以删除
+        try {
+            List<TdmShipGateWayCountDf> tdmShipGateWayCountDfs = tdmShipGateWayCountDfService.list();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("北斗过闸数");
+            jsonArray1.put("实际过闸数");
+            jsonArray.put(jsonArray1);
+            for (TdmShipGateWayCountDf tdmShipGateWayCountDf : tdmShipGateWayCountDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmShipGateWayCountDf.getSnid());
+                jsonArray2.put(tdmShipGateWayCountDf.getBeidouCount());
+                jsonArray2.put(tdmShipGateWayCountDf.getTotalCount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonArray.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+    //船舶收费方式统计
+    //ddl_tdm_payment_method_distribution
+
+
 
 
 

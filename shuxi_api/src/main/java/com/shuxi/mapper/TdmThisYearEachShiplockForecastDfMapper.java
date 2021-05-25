@@ -1,7 +1,10 @@
 package com.shuxi.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.shuxi.dto.TdmThisYearEachShiplockForecastDfDTO;
 import com.shuxi.entity.TdmThisYearEachShiplockForecastDf;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.shuxi.entity.TdmThisYearEachShiplockForecastDf;
  * @since 2021-05-21
  */
 public interface TdmThisYearEachShiplockForecastDfMapper extends BaseMapper<TdmThisYearEachShiplockForecastDf> {
-
+    List<TdmThisYearEachShiplockForecastDfDTO> getForecastAndActual();
 }
