@@ -3,6 +3,7 @@ package com.shuxi.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shuxi.entity.TdmLastWeekCapacityFreightRate;
 import com.shuxi.mapper.TdmLastWeekCapacityFreightRateMapper;
+import com.shuxi.service.ITdmLastWeekCapacityFreightRateService;
 import org.springframework.stereotype.Service;
 
 /**

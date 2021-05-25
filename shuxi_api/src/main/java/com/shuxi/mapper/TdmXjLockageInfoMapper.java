@@ -1,7 +1,10 @@
 package com.shuxi.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.shuxi.dto.TdmXjLockageInfoDTO;
 import com.shuxi.entity.TdmXjLockageInfo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.shuxi.entity.TdmXjLockageInfo;
  * @since 2021-05-25
  */
 public interface TdmXjLockageInfoMapper extends BaseMapper<TdmXjLockageInfo> {
-
+    List<TdmXjLockageInfoDTO> getNowAndPast();
 }

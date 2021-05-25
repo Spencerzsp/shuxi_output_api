@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shuxi.mapper.TdmXjLockageInfoMapper">
-
+    <select id="getNowAndPast" resultType="com.shuxi.dto.TdmXjLockageInfoDTO">
+        select t1.snid snid ,t2.tonnage past_tonnage,t1.tonnage now_tonnage,t2.gate_times past_gate_times,t1.gate_times now_gate_times,t2.ncls_crry_tns past_ncls_crry_tns,t1.ncls_crry_tns now_ncls_crry_tns,t2.crg_ddwght_tns past_crg_ddwght_tns,t1.crg_ddwght_tns now_crg_ddwght_tns,t2.cz_count past_cz_count,t1.cz_count now_cz_count,t2.act_fee_pd past_act_fee_pd,t1.act_fee_pd now_act_fee_pd
+        from tdm_xj_lockage_info t1
+        left join tdm_xj_lockage_info t2
+        on t1.snid=t2.snid
+        where t1.target='今年' and t2.target='去年'
+    </select>
 </mapper>

@@ -1,7 +1,10 @@
 package com.shuxi.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shuxi.dto.TdmXjLockageInfoDTO;
 import com.shuxi.entity.TdmXjLockageInfo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.shuxi.entity.TdmXjLockageInfo;
  * @since 2021-05-25
  */
 public interface ITdmXjLockageInfoService extends IService<TdmXjLockageInfo> {
-
+    List<TdmXjLockageInfoDTO> getNowAndPast();
 }
