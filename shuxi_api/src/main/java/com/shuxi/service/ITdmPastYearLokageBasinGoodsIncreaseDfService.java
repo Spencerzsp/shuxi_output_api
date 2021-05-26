@@ -1,7 +1,10 @@
 package com.shuxi.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shuxi.dto.TdmPastYearLokageBasinGoodsIncrementDfDTO;
 import com.shuxi.entity.TdmPastYearLokageBasinGoodsIncreaseDf;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.shuxi.entity.TdmPastYearLokageBasinGoodsIncreaseDf;
  * @since 2021-05-21
  */
 public interface ITdmPastYearLokageBasinGoodsIncreaseDfService extends IService<TdmPastYearLokageBasinGoodsIncreaseDf> {
-
+    List<TdmPastYearLokageBasinGoodsIncrementDfDTO> getUpAndDownCrgDdwghtTns();
 }

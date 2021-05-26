@@ -1,7 +1,11 @@
 package com.shuxi.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.shuxi.dto.TdmPastYearLokageBasinGoodsDfDTO;
+import com.shuxi.dto.TdmPastYearLokageBasinGoodsIncrementDfDTO;
 import com.shuxi.entity.TdmPastYearLokageBasinGoodsIncreaseDf;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +16,5 @@ import com.shuxi.entity.TdmPastYearLokageBasinGoodsIncreaseDf;
  * @since 2021-05-21
  */
 public interface TdmPastYearLokageBasinGoodsIncreaseDfMapper extends BaseMapper<TdmPastYearLokageBasinGoodsIncreaseDf> {
-
+    List<TdmPastYearLokageBasinGoodsIncrementDfDTO> getUpAndDownCrgDdwghtTns();
 }

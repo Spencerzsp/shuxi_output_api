@@ -6,6 +6,7 @@ import com.shuxi.entity.TdmPastYearLokageBasinGoodsDf;
 import com.shuxi.entity.TdmRecentYearTopCityPieDf;
 import com.shuxi.entity.TdmTopCityFormDf;
 import com.shuxi.entity.TdmTopGoodsCloudChartDf;
+import com.shuxi.mapper.TdmPastYearLokageBasinGoodsIncreaseDfMapper;
 import com.shuxi.service.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -333,6 +334,16 @@ public class ThirdScreenController {
             }
             return jsonObject.toString();
         }
+    }
+
+    @Autowired
+    private ITdmPastYearLokageBasinGoodsIncreaseDfService tdmPastYearLokageBasinGoodsIncreaseDfService;
+    //流域货运量同比变化（过去一年）（流域）
+    //tdm_past_year_lokage_basin_goods_increase_df
+    public String freightTrafficTrendIncrementByValley(@RequestParam String valley){
+        List<TdmPastYearLokageBasinGoodsDfDTO> tdmPastYearLokageBasinGoodsDfServiceUpAndDownCrgDdwghtTns = tdmPastYearLokageBasinGoodsDfService.getUpAndDownCrgDdwghtTns();
+
+        return null;
     }
 
 
