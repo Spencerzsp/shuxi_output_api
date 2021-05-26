@@ -1,7 +1,10 @@
 package com.shuxi.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shuxi.dto.TdmPaymentMethodDistributionDfDTO;
 import com.shuxi.entity.TdmPaymentMethodDistributionDf;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.shuxi.entity.TdmPaymentMethodDistributionDf;
  * @since 2021-05-26
  */
 public interface ITdmPaymentMethodDistributionDfService extends IService<TdmPaymentMethodDistributionDf> {
-
+    List<TdmPaymentMethodDistributionDfDTO> getOnlineAndTotal();
 }

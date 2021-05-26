@@ -1,4 +1,4 @@
-﻿package com.shuxi.dto;
+package com.shuxi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

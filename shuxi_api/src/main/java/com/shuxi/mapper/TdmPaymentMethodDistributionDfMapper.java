@@ -1,7 +1,10 @@
 package com.shuxi.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.shuxi.dto.TdmPaymentMethodDistributionDfDTO;
 import com.shuxi.entity.TdmPaymentMethodDistributionDf;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.shuxi.entity.TdmPaymentMethodDistributionDf;
  * @since 2021-05-26
  */
 public interface TdmPaymentMethodDistributionDfMapper extends BaseMapper<TdmPaymentMethodDistributionDf> {
-
+    List<TdmPaymentMethodDistributionDfDTO> getOnlineAndTotal();
 }

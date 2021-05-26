@@ -1,6 +1,7 @@
 package com.shuxi.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.shuxi.dto.TdmPaymentMethodDistributionDfDTO;
 import com.shuxi.dto.TdmThisYearEachShiplockForecastDfDTO;
 import com.shuxi.entity.TdmEachShiplockLockageDf;
 import com.shuxi.entity.TdmRecentYearLockageYearIncreaseDf;
@@ -30,6 +31,8 @@ public class SecondScreenController {
     private ITdmRecentYearLockageYearIncreaseDfService tdmRecentYearLockageYearIncreaseDfService;
     @Autowired
     private ITdmThisYearEachShiplockForecastDfService tdmThisYearEachShiplockForecastDfService;
+    @Autowired
+    private ITdmPaymentMethodDistributionDfService tdmPaymentMethodDistributionDfService;
     //本年船闸过闸数据
     @RequestMapping("/thisYearShipLockageByShipLock")
     public String thisYearShipLockageByShipLock(){
@@ -315,6 +318,81 @@ public class SecondScreenController {
 
     //船舶收费方式统计
     //ddl_tdm_payment_method_distribution
+    @RequestMapping("/shipPaymentMethodDistribution")
+    public String shipPaymentMethodDistribution(){
+        try {
+            List<TdmPaymentMethodDistributionDfDTO> onlineAndTotal = tdmPaymentMethodDistributionDfService.getOnlineAndTotal();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("线上收费");
+            jsonArray1.put("总收费");
+            jsonArray.put(jsonArray1);
+            for (TdmPaymentMethodDistributionDfDTO tdmPaymentMethodDistributionDfDTO : onlineAndTotal) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmPaymentMethodDistributionDfDTO.getSnid());
+                jsonArray2.put(tdmPaymentMethodDistributionDfDTO.getOnLinePayCount());
+                jsonArray2.put(tdmPaymentMethodDistributionDfDTO.getTotalPayCount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+
+    }
+
+
+    //排队中船舶数量
+    @RequestMapping("/queuingShepCount")
+    public String queuingShepCount(){
+        QueryWrapper<TdmEachShiplockLockageDf> queryWrapper = new QueryWrapper<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+        try {
+            String year = simpleDateFormat.format(new Date());
+            queryWrapper.eq("fz_year",year);
+            List<TdmEachShiplockLockageDf> tdmEachShiplockLockageDfs = tdmEachShiplockLockageDfService.list(queryWrapper);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("排队中船舶数量");
+            jsonArray.put(jsonArray1);
+            for (TdmEachShiplockLockageDf tdmEachShiplockLockageDf : tdmEachShiplockLockageDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmEachShiplockLockageDf.getSnid());
+                jsonArray2.put(tdmEachShiplockLockageDf.getQueuingShipCount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+    //各船闸过闸效率分析
+    //未定
 
 
 
