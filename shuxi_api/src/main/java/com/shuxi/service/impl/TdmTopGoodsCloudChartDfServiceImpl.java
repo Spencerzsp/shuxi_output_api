@@ -1,10 +1,14 @@
 package com.shuxi.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shuxi.dto.TdmTopGoodsCloudChartDfDTO;
 import com.shuxi.entity.TdmTopGoodsCloudChartDf;
 import com.shuxi.mapper.TdmTopGoodsCloudChartDfMapper;
 import com.shuxi.service.ITdmTopGoodsCloudChartDfService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +20,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TdmTopGoodsCloudChartDfServiceImpl extends ServiceImpl<TdmTopGoodsCloudChartDfMapper, TdmTopGoodsCloudChartDf> implements ITdmTopGoodsCloudChartDfService {
-
+    @Autowired
+    private TdmTopGoodsCloudChartDfMapper tdmTopGoodsCloudChartDfMapper;
+    @Override
+    public List<TdmTopGoodsCloudChartDfDTO> getGetOrSendGoodsInfo() {
+        return tdmTopGoodsCloudChartDfMapper.getGetOrSendGoodsInfo();
+    }
 }

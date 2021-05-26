@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shuxi.mapper.TdmTopGoodsCloudChartDfMapper">
-
+    <select id="getGetOrSendGoodsInfo" resultType="com.shuxi.dto.TdmTopGoodsCloudChartDfDTO">
+        select
+            get_table.dimension_values,get_table.crg_ddwght_tns,send_table.crg_ddwght_tns
+        from
+            (
+                select show_dimension,dimension_values,count_type,sum(crg_ddwght_tns) crg_ddwght_tns
+                from tdm_top_goods_cloud_chart_df
+                where show_dimension='城市' and dimension_values is not null and count_type='收货'
+                group by show_dimension,dimension_values,count_type
+            ) get_table
+                join
+            (
+                select show_dimension,dimension_values,count_type,sum(crg_ddwght_tns) crg_ddwght_tns
+                from tdm_top_goods_cloud_chart_df
+                where show_dimension='城市' and dimension_values is not null and count_type='发货'
+                group by show_dimension,dimension_values,count_type
+            ) send_table
+            on get_table.dimension_values=send_table.dimension_values
+    </select>
 </mapper>

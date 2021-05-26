@@ -1,7 +1,10 @@
 package com.shuxi.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.shuxi.dto.TdmTopGoodsCloudChartDfDTO;
 import com.shuxi.entity.TdmTopGoodsCloudChartDf;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.shuxi.entity.TdmTopGoodsCloudChartDf;
  * @since 2021-05-21
  */
 public interface TdmTopGoodsCloudChartDfMapper extends BaseMapper<TdmTopGoodsCloudChartDf> {
-
+    List<TdmTopGoodsCloudChartDfDTO> getGetOrSendGoodsInfo();
 }

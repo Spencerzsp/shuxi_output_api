@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shuxi.mapper.TdmPastYearLokageBasinGoodsIncreaseDfMapper">
-
+    <select id="getUpAndDownCrgDdwghtTns" resultType="com.shuxi.dto.TdmPastYearLokageBasinGoodsIncrementDfDTO">
+        select up_table.show_dimension show_dimension,up_table.fz_date fz_date,up_table.dimension_values dimension_values,up_table.year_increase+1 up_year_change,down_table.year_increase+1 down_year_change
+        from tdm_past_year_lokage_basin_goods_increase_df up_table
+                 join tdm_past_year_lokage_basin_goods_increase_df down_table
+                      on up_table.show_dimension=down_table.show_dimension
+                          and up_table.fz_date=down_table.fz_date
+                          and up_table.dimension_values=down_table.dimension_values
+        where up_table.curs_cd='上行' and down_table.curs_cd='下行'
+    </select>
 </mapper>

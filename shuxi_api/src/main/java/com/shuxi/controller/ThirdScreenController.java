@@ -2,10 +2,9 @@ package com.shuxi.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.shuxi.dto.TdmPastYearLokageBasinGoodsDfDTO;
-import com.shuxi.entity.TdmPastYearLokageBasinGoodsDf;
-import com.shuxi.entity.TdmRecentYearTopCityPieDf;
-import com.shuxi.entity.TdmTopCityFormDf;
-import com.shuxi.entity.TdmTopGoodsCloudChartDf;
+import com.shuxi.dto.TdmPastYearLokageBasinGoodsIncrementDfDTO;
+import com.shuxi.dto.TdmTopGoodsCloudChartDfDTO;
+import com.shuxi.entity.*;
 import com.shuxi.mapper.TdmPastYearLokageBasinGoodsIncreaseDfMapper;
 import com.shuxi.service.*;
 import org.json.JSONArray;
@@ -35,6 +34,10 @@ public class ThirdScreenController {
     private ITdmTopCityFormDfService tdmTopCityFormDfService;
     @Autowired
     private ITdmTopGoodsCloudChartDfService tdmTopGoodsCloudChartDfService;
+    @Autowired
+    private ITdmPastYearLokageBasinGoodsIncreaseDfService tdmPastYearLokageBasinGoodsIncreaseDfService;
+    @Autowired
+    private ITdmTopCityGoodsWeightsDfService tdmTopCityGoodsWeightsDfService;
     //2021年西江流域十佳发货地
     //tdm_recent_year_top_city_pie_df
     @RequestMapping("/xjTopStartCity10")
@@ -336,16 +339,158 @@ public class ThirdScreenController {
         }
     }
 
-    @Autowired
-    private ITdmPastYearLokageBasinGoodsIncreaseDfService tdmPastYearLokageBasinGoodsIncreaseDfService;
+
     //流域货运量同比变化（过去一年）（流域）
     //tdm_past_year_lokage_basin_goods_increase_df
+    @RequestMapping("/freightTrafficTrendIncrementByValley")
     public String freightTrafficTrendIncrementByValley(@RequestParam String valley){
-        List<TdmPastYearLokageBasinGoodsDfDTO> tdmPastYearLokageBasinGoodsDfServiceUpAndDownCrgDdwghtTns = tdmPastYearLokageBasinGoodsDfService.getUpAndDownCrgDdwghtTns();
+        try {
+            List<TdmPastYearLokageBasinGoodsIncrementDfDTO> tdmPastYearLokageBasinGoodsIncreaseDfServiceUpAndDownCrgDdwghtTns = tdmPastYearLokageBasinGoodsIncreaseDfService.getUpAndDownCrgDdwghtTns();
+            List<TdmPastYearLokageBasinGoodsIncrementDfDTO> tdmPastYearLokageBasinGoodsIncrementDfDTOS = tdmPastYearLokageBasinGoodsIncreaseDfServiceUpAndDownCrgDdwghtTns.stream()
+                    .filter(tdmPastYearLokageBasinGoodsIncrementDfDTO -> tdmPastYearLokageBasinGoodsIncrementDfDTO.getShowDimension().equals("流域") && tdmPastYearLokageBasinGoodsIncrementDfDTO.getDimensionValues().equals(valley) ? true : false)
+                    .collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("年月");
+            jsonArray1.put("上行货物");
+            jsonArray1.put("下行货物");
+            jsonArray.put(jsonArray1);
+            for (TdmPastYearLokageBasinGoodsIncrementDfDTO tdmPastYearLokageBasinGoodsIncrementDfDTO : tdmPastYearLokageBasinGoodsIncrementDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getFzDate());
+                jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getUpYearChange());
+                jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getDownYearChange());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
 
-        return null;
+            }
+            return jsonObject.toString();
+        }
     }
 
+    //流域货运量同比变化（过去一年）（船闸）
+    //tdm_past_year_lokage_basin_goods_increase_df
+    @RequestMapping("/freightTrafficTrendIncrementByShipLock")
+    public String freightTrafficTrendIncrementByShipLock(@RequestParam String shipLock){
+        try {
+            List<TdmPastYearLokageBasinGoodsIncrementDfDTO> tdmPastYearLokageBasinGoodsIncreaseDfServiceUpAndDownCrgDdwghtTns = tdmPastYearLokageBasinGoodsIncreaseDfService.getUpAndDownCrgDdwghtTns();
+            List<TdmPastYearLokageBasinGoodsIncrementDfDTO> tdmPastYearLokageBasinGoodsIncrementDfDTOS = tdmPastYearLokageBasinGoodsIncreaseDfServiceUpAndDownCrgDdwghtTns.stream()
+                    .filter(tdmPastYearLokageBasinGoodsIncrementDfDTO -> tdmPastYearLokageBasinGoodsIncrementDfDTO.getShowDimension().equals("船闸") && tdmPastYearLokageBasinGoodsIncrementDfDTO.getDimensionValues().equals(shipLock) ? true : false)
+                    .collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("年月");
+            jsonArray1.put("上行货物");
+            jsonArray1.put("下行货物");
+            jsonArray.put(jsonArray1);
+            for (TdmPastYearLokageBasinGoodsIncrementDfDTO tdmPastYearLokageBasinGoodsIncrementDfDTO : tdmPastYearLokageBasinGoodsIncrementDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getFzDate());
+                jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getUpYearChange());
+                jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getDownYearChange());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+    //2021年热门城市收发货
+    //tdm_top_city_goods_weights_df
+    @RequestMapping("/hotCityGoodsWeights")
+    public String hotCityGoodsWeights(){
+        try {
+            List<TdmTopCityGoodsWeightsDf> tdmTopCityGoodsWeightsDfs = tdmTopCityGoodsWeightsDfService.list();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("城市");
+            jsonArray1.put("发货数");
+            jsonArray1.put("收货数");
+            jsonArray.put(jsonArray1);
+            for (TdmTopCityGoodsWeightsDf tdmTopCityGoodsWeightsDf : tdmTopCityGoodsWeightsDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmTopCityGoodsWeightsDf.getCity());
+                jsonArray2.put(tdmTopCityGoodsWeightsDf.getDprtCrgDdwghtTns());
+                jsonArray2.put(tdmTopCityGoodsWeightsDf.getArrTypeCrgDdwghtTns());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+
+    }
+
+    //城市收发货情况
+    //tdm_top_goods_cloud_chart_df
+    @RequestMapping("/cityGetOrSendGoodsInfo")
+    public String cityGetOrSendGoodsInfo(){
+        try {
+            List<TdmTopGoodsCloudChartDfDTO> getOrSendGoodsInfo = tdmTopGoodsCloudChartDfService.getGetOrSendGoodsInfo();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("城市");
+            jsonArray1.put("收货");
+            jsonArray1.put("发货");
+            jsonArray.put(jsonArray1);
+            for (TdmTopGoodsCloudChartDfDTO tdmTopGoodsCloudChartDfDTO : getOrSendGoodsInfo) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmTopGoodsCloudChartDfDTO.getCity());
+                jsonArray2.put(tdmTopGoodsCloudChartDfDTO.getGetGoods());
+                jsonArray2.put(tdmTopGoodsCloudChartDfDTO.getSendGoods());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
 
 
 
