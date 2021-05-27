@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shuxi.mapper.TdmThisYearEachShiplockForecastDfMapper">
     <select id="getForecastAndActual" resultType="com.shuxi.dto.TdmThisYearEachShiplockForecastDfDTO">
-        select forecast_table.show_type show_type,forecast_table.data_type data_type,forecast_table.cz_count forecast_cz_count,forecast_table.crg_ddwght_tns forecast_crg_ddwght_tns,actual_table.cz_count actual_czCount,actual_table.crg_ddwght_tns actual_crg_ddwght_tns
+        select forecast_table.show_type show_type,forecast_table.data_type data_type,forecast_table.cz_count forecast_cz_count,forecast_table.crg_ddwght_tns forecast_crg_ddwght_tns,actual_table.cz_count actual_czCount,actual_table.crg_ddwght_tns actual_crg_ddwght_tns,forecast_table.ncls_crry_tns forecast_ncls_crry_tns,actual_table.ncls_crry_tns actual_ncls_crry_tns,forecast_table.tot_ton forecast_tot_ton,actual_table.tot_ton actual_tot_ton
         from tdm_this_year_each_shiplock_forecast_df forecast_table
         left join tdm_this_year_each_shiplock_forecast_df actual_table
         on forecast_table.data_type=actual_table.data_type and forecast_table.show_type=actual_table.show_type

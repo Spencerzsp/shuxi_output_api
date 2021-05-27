@@ -11,7 +11,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author yu hao
- * @since 2021-05-21
+ * @since 2021-05-27
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -38,6 +38,16 @@ public class TdmThisYearEachShiplockForecastDf implements Serializable {
      * 实载吨位
      */
     private String crgDdwghtTns;
+
+    /**
+     * 荷载吨位
+     */
+    private String nclsCrryTns;
+
+    /**
+     * 总吨
+     */
+    private String totTon;
 
     /**
      * 过闸船数/艘次

@@ -12,4 +12,8 @@ public class TdmThisYearEachShiplockForecastDfDTO {
     private String forecastCrgDdwghtTns;
     private String actualCzCount;
     private String actualCrgDdwghtTns;
+    private String forecastNclsCrryTns;
+    private String actualNclsCrryTns;
+    private String forecastTotTon;
+    private String actualTotTon;
 }

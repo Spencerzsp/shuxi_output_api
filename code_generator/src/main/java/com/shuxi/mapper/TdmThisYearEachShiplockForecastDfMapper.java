@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author yu hao
- * @since 2021-05-21
+ * @since 2021-05-27
  */
 public interface TdmThisYearEachShiplockForecastDfMapper extends BaseMapper<TdmThisYearEachShiplockForecastDf> {
 
