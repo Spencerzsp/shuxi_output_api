@@ -3,10 +3,7 @@ package com.shuxi.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.shuxi.dto.TdmPaymentMethodDistributionDfDTO;
 import com.shuxi.dto.TdmThisYearEachShiplockForecastDfDTO;
-import com.shuxi.entity.TdmEachShiplockLockageDf;
-import com.shuxi.entity.TdmRecentYearLockageYearIncreaseDf;
-import com.shuxi.entity.TdmShipGateWayCountDf;
-import com.shuxi.entity.TdmThisYearEachMonthLockageDf;
+import com.shuxi.entity.*;
 import com.shuxi.service.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,9 +30,9 @@ public class SecondScreenController {
     private ITdmThisYearEachShiplockForecastDfService tdmThisYearEachShiplockForecastDfService;
     @Autowired
     private ITdmPaymentMethodDistributionDfService tdmPaymentMethodDistributionDfService;
-    //本年船闸过闸数据
-    @RequestMapping("/thisYearShipLockageByShipLock")
-    public String thisYearShipLockageByShipLock(){
+    //本年船闸过闸数据(艘次)
+    @RequestMapping("/thisYearShipLockageByShipLockByCzCount")
+    public String thisYearShipLockageByShipLockByCzCount(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
         String year = simpleDateFormat.format(new Date());
         QueryWrapper<TdmEachShiplockLockageDf> queryWrapper = new QueryWrapper<>();
@@ -69,6 +66,125 @@ public class SecondScreenController {
             return jsonObject.toString();
         }
     }
+
+
+    //本年船闸过闸数据(总吨)
+    @RequestMapping("/thisYearShipLockageByShipLockByTotalton")
+    public String thisYearShipLockageByShipLockByTotalton(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+        String year = simpleDateFormat.format(new Date());
+        QueryWrapper<TdmEachShiplockLockageDf> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("fz_year",year);
+        try {
+            List<TdmEachShiplockLockageDf> tdmEachShiplockLockageDfs = tdmEachShiplockLockageDfService.list(queryWrapper);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("总吨");
+            jsonArray.put(jsonArray1);
+            for (TdmEachShiplockLockageDf tdmEachShiplockLockageDf : tdmEachShiplockLockageDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmEachShiplockLockageDf.getSnid());
+                jsonArray2.put(tdmEachShiplockLockageDf.getTotTon());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+    //本年船闸过闸数据(核载)
+    @RequestMapping("/thisYearShipLockageByShipLockByNclsCrryTns")
+    public String thisYearShipLockageByShipLockByNclsCrryTns(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+        String year = simpleDateFormat.format(new Date());
+        QueryWrapper<TdmEachShiplockLockageDf> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("fz_year",year);
+        try {
+            List<TdmEachShiplockLockageDf> tdmEachShiplockLockageDfs = tdmEachShiplockLockageDfService.list(queryWrapper);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("核载");
+            jsonArray.put(jsonArray1);
+            for (TdmEachShiplockLockageDf tdmEachShiplockLockageDf : tdmEachShiplockLockageDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmEachShiplockLockageDf.getSnid());
+                jsonArray2.put(tdmEachShiplockLockageDf.getNclsCrryTns());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+    //本年船闸过闸数据(实载)
+    @RequestMapping("/thisYearShipLockageByShipLockByCrgDdwghtTns")
+    public String thisYearShipLockageByShipLockByCrgDdwghtTns(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+        String year = simpleDateFormat.format(new Date());
+        QueryWrapper<TdmEachShiplockLockageDf> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("fz_year",year);
+        try {
+            List<TdmEachShiplockLockageDf> tdmEachShiplockLockageDfs = tdmEachShiplockLockageDfService.list(queryWrapper);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("实载");
+            jsonArray.put(jsonArray1);
+            for (TdmEachShiplockLockageDf tdmEachShiplockLockageDf : tdmEachShiplockLockageDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmEachShiplockLockageDf.getSnid());
+                jsonArray2.put(tdmEachShiplockLockageDf.getCrgDdwghtTns());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+
+
+
 
     //本年船闸过闸数据（按月统计）
     @RequestMapping("/thisYearShipLockageByMonth")
@@ -199,7 +315,7 @@ public class SecondScreenController {
     }
 
 
-    //各船闸本年预测过闸数据
+    //各船闸本年预测过闸数据(艘次)
     @RequestMapping("/thisYearForecast")
     public String thisYearForecast(){
         try {
@@ -391,8 +507,87 @@ public class SecondScreenController {
         }
     }
 
+
+    //排队中船舶数量
+    @RequestMapping("/schedulingShepCount")
+    public String schedulingShepCount(){
+        QueryWrapper<TdmEachShiplockLockageDf> queryWrapper = new QueryWrapper<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+        try {
+            String year = simpleDateFormat.format(new Date());
+            queryWrapper.eq("fz_year",year);
+            List<TdmEachShiplockLockageDf> tdmEachShiplockLockageDfs = tdmEachShiplockLockageDfService.list(queryWrapper);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("调度中船舶数量");
+            jsonArray.put(jsonArray1);
+            for (TdmEachShiplockLockageDf tdmEachShiplockLockageDf : tdmEachShiplockLockageDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmEachShiplockLockageDf.getSnid());
+                jsonArray2.put(tdmEachShiplockLockageDf.getSchedulingShipCount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+
+
+    @Autowired
+    private ITdmShipLockageEfficientAnalyseService tdmShipLockageEfficientAnalyseService;
     //各船闸过闸效率分析
     //未定
+    @RequestMapping("/shipLockageEfficientAnalyse")
+    public String shipLockageEfficientAnalyse(){
+        try {
+            List<TdmShipLockageEfficientAnalyse> tdmShipLockageEfficientAnalyses = tdmShipLockageEfficientAnalyseService.list();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("最高时间");
+            jsonArray1.put("最低时间");
+            jsonArray1.put("平均时间");
+            jsonArray.put(jsonArray1);
+            for (TdmShipLockageEfficientAnalyse tdmShipLockageEfficientAnalysis : tdmShipLockageEfficientAnalyses) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmShipLockageEfficientAnalysis.getSnid());
+                jsonArray2.put(tdmShipLockageEfficientAnalysis.getMaxTime());
+                jsonArray2.put(tdmShipLockageEfficientAnalysis.getMinTime());
+                jsonArray2.put(tdmShipLockageEfficientAnalysis.getAvgTime());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
 
 
 
