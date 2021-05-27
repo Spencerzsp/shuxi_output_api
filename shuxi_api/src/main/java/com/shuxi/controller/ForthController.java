@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.shuxi.entity.TdmTopCityFormDf;
 import com.shuxi.entity.TdmTopVoyageFormDf;
 import com.shuxi.entity.TdmVoyageInfo;
+import com.shuxi.entity.TdmVoyageSheet;
 import com.shuxi.service.ITdmTopVoyageFormDfService;
 import com.shuxi.service.ITdmVoyageInfoService;
+import com.shuxi.service.ITdmVoyageSheetService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +32,8 @@ public class ForthController {
 
     @Autowired
     private ITdmTopVoyageFormDfService tdmTopVoyageFormDfService;
+    @Autowired
+    private ITdmVoyageInfoService tdmVoyageInfoService;
     //2020年十佳航线
     //tdm_top_voyage_form_df
     @RequestMapping("/topVoyage2020")
@@ -119,8 +123,7 @@ public class ForthController {
    }
     *
     * */
-    @Autowired
-    private ITdmVoyageInfoService tdmVoyageInfoService;
+
     //tdm_voyage_info
     //航线总数
     @RequestMapping("/totalVoyageNumber")
@@ -238,8 +241,47 @@ public class ForthController {
         }
     }
 
-
+    @Autowired
+    private ITdmVoyageSheetService tdmVoyageSheetService;
     //运力、重量（货量）、占比（货量占总货量的占比）、同比（今年同期货量和去年同期的对比）
+    //航线屏下方表格
+    // tdm_voyage_sheet
+    @RequestMapping("/getTop30VoyageInfo")
+    public String getTop30VoyageInfo(){
+        try {
+            List<TdmVoyageSheet> tdmVoyageSheets = tdmVoyageSheetService.list();
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("航线");
+            jsonArray1.put("运力");
+            jsonArray1.put("货量");
+            jsonArray1.put("占比");
+            jsonArray1.put("同比");
+            jsonArray.put(jsonArray1);
+            for (TdmVoyageSheet tdmVoyageSheet : tdmVoyageSheets) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmVoyageSheet.getDprtPt()+"-"+tdmVoyageSheet.getArrPt());
+                jsonArray2.put(tdmVoyageSheet.getNclsCrryTns());
+                jsonArray2.put(tdmVoyageSheet.getCrgDdwghtTns());
+                jsonArray2.put(tdmVoyageSheet.getProportion());
+                jsonArray2.put(tdmVoyageSheet.getYearOnYearBasis());
+                jsonArray.put(jsonArray2);
+            }
+            return jsonArray.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
 
+            }
+            return jsonObject.toString();
+        }
+    }
+
+    //西江流域航线图
+    //2021年十佳航线
 
 }
