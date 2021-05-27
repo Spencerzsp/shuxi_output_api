@@ -354,7 +354,127 @@ public class SecondScreenController {
         }
     }
 
-    //各船闸本月预测过闸数据
+
+    //各船闸本年预测过闸数据(总吨)
+    @RequestMapping("/thisYearForecastByTotTon")
+    public String thisYearForecastByTotTon(){
+        try {
+            List<TdmThisYearEachShiplockForecastDfDTO> forecastAndActual = tdmThisYearEachShiplockForecastDfService.getForecastAndActual();
+            List<TdmThisYearEachShiplockForecastDfDTO> tdmThisYearEachShiplockForecastDfDTOS = forecastAndActual.stream().filter(tdmThisYearEachShiplockForecastDfDTO -> {
+                return tdmThisYearEachShiplockForecastDfDTO.getShowType().equals("本年") ? true : false;
+            })
+                    .collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("预测过闸");
+            jsonArray1.put("实际过闸");
+            jsonArray.put(jsonArray1);
+            for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastTotTon());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualTotTon());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+    //各船闸本年预测过闸数据(荷载)
+    @RequestMapping("/thisYearForecastByNclsCrryTns")
+    public String thisYearForecastByNclsCrryTns(){
+        try {
+            List<TdmThisYearEachShiplockForecastDfDTO> forecastAndActual = tdmThisYearEachShiplockForecastDfService.getForecastAndActual();
+            List<TdmThisYearEachShiplockForecastDfDTO> tdmThisYearEachShiplockForecastDfDTOS = forecastAndActual.stream().filter(tdmThisYearEachShiplockForecastDfDTO -> {
+                return tdmThisYearEachShiplockForecastDfDTO.getShowType().equals("本年") ? true : false;
+            })
+                    .collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("预测过闸");
+            jsonArray1.put("实际过闸");
+            jsonArray.put(jsonArray1);
+            for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastNclsCrryTns());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualNclsCrryTns());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+    //各船闸本年预测过闸数据(实载)
+    @RequestMapping("/thisYearForecastByCrgDdwghtTns")
+    public String thisYearForecastByCrgDdwghtTns(){
+        try {
+            List<TdmThisYearEachShiplockForecastDfDTO> forecastAndActual = tdmThisYearEachShiplockForecastDfService.getForecastAndActual();
+            List<TdmThisYearEachShiplockForecastDfDTO> tdmThisYearEachShiplockForecastDfDTOS = forecastAndActual.stream().filter(tdmThisYearEachShiplockForecastDfDTO -> {
+                return tdmThisYearEachShiplockForecastDfDTO.getShowType().equals("本年") ? true : false;
+            })
+                    .collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("预测过闸");
+            jsonArray1.put("实际过闸");
+            jsonArray.put(jsonArray1);
+            for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastCrgDdwghtTns());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualCrgDdwghtTns());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+    //各船闸本月预测过闸数据（艘次）
     @RequestMapping("/thisMonthForecast")
     public String thisMonthForecast(){
         try {
@@ -392,6 +512,130 @@ public class SecondScreenController {
             return jsonObject.toString();
         }
     }
+
+    //各船闸本月预测过闸数据（总吨）
+    @RequestMapping("/thisMonthForecastByTotTon")
+    public String thisMonthForecasttByTotTon(){
+        try {
+            List<TdmThisYearEachShiplockForecastDfDTO> forecastAndActual = tdmThisYearEachShiplockForecastDfService.getForecastAndActual();
+            List<TdmThisYearEachShiplockForecastDfDTO> tdmThisYearEachShiplockForecastDfDTOS = forecastAndActual.stream().filter(tdmThisYearEachShiplockForecastDfDTO -> {
+                return tdmThisYearEachShiplockForecastDfDTO.getShowType().equals("本月") ? true : false;
+            })
+                    .collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("预测过闸");
+            jsonArray1.put("实际过闸");
+            jsonArray.put(jsonArray1);
+            for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastTotTon());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualTotTon());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+    //各船闸本月预测过闸数据（核载）
+    @RequestMapping("/thisMonthForecastByNclsCrryTns")
+    public String thisMonthForecasttByNclsCrryTns(){
+        try {
+            List<TdmThisYearEachShiplockForecastDfDTO> forecastAndActual = tdmThisYearEachShiplockForecastDfService.getForecastAndActual();
+            List<TdmThisYearEachShiplockForecastDfDTO> tdmThisYearEachShiplockForecastDfDTOS = forecastAndActual.stream().filter(tdmThisYearEachShiplockForecastDfDTO -> {
+                return tdmThisYearEachShiplockForecastDfDTO.getShowType().equals("本月") ? true : false;
+            })
+                    .collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("预测过闸");
+            jsonArray1.put("实际过闸");
+            jsonArray.put(jsonArray1);
+            for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastNclsCrryTns());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualNclsCrryTns());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+    //各船闸本月预测过闸数据（核载）
+    @RequestMapping("/thisMonthForecastByCrgDdwghtTns")
+    public String thisMonthForecasttByCrgDdwghtTns(){
+        try {
+            List<TdmThisYearEachShiplockForecastDfDTO> forecastAndActual = tdmThisYearEachShiplockForecastDfService.getForecastAndActual();
+            List<TdmThisYearEachShiplockForecastDfDTO> tdmThisYearEachShiplockForecastDfDTOS = forecastAndActual.stream().filter(tdmThisYearEachShiplockForecastDfDTO -> {
+                return tdmThisYearEachShiplockForecastDfDTO.getShowType().equals("本月") ? true : false;
+            })
+                    .collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("预测过闸");
+            jsonArray1.put("实际过闸");
+            jsonArray.put(jsonArray1);
+            for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastCrgDdwghtTns());
+                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualCrgDdwghtTns());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+
+
+
 
     //船舶报道方式统计
     //tdm_ship_gate_way_count_df
