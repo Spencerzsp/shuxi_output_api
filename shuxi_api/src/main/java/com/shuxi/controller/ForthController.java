@@ -1,10 +1,8 @@
 package com.shuxi.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.shuxi.entity.TdmTopCityFormDf;
-import com.shuxi.entity.TdmTopVoyageFormDf;
-import com.shuxi.entity.TdmVoyageInfo;
-import com.shuxi.entity.TdmVoyageSheet;
+import com.shuxi.entity.*;
+import com.shuxi.service.IDimCityPositionService;
 import com.shuxi.service.ITdmTopVoyageFormDfService;
 import com.shuxi.service.ITdmVoyageInfoService;
 import com.shuxi.service.ITdmVoyageSheetService;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -285,20 +284,37 @@ public class ForthController {
     //西江流域航线图
     //2021年十佳航线
     //tdmTopVoyageFormDfService
+    @Autowired
+    private IDimCityPositionService dimCityPositionService;
     @RequestMapping("/voyageMainPicture")
-    public String voyageMainPicture(){
+    public String voyageMainPicture() {
         try {
+            List<DimCityPosition> dimCityPositions = dimCityPositionService.list();
+            HashMap<String, DimCityPosition> hashMap = new HashMap<>();
+            for (DimCityPosition dimCityPosition : dimCityPositions) {
+                hashMap.put(dimCityPosition.getCity(),dimCityPosition);
+            }
+
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
             String year = simpleDateFormat.format(new Date());
             QueryWrapper<TdmTopVoyageFormDf> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("count_year",year);
+            queryWrapper.eq("count_year", year);
             List<TdmTopVoyageFormDf> tdmTopVoyageFormDfs = tdmTopVoyageFormDfService.list(queryWrapper);
             JSONArray jsonArray = new JSONArray();
             for (TdmTopVoyageFormDf tdmTopVoyageFormDf : tdmTopVoyageFormDfs) {
+                //System.out.println("tdmTopVoyageFormDf = " + tdmTopVoyageFormDf);
+                JSONArray jsonArray1 = new JSONArray();
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("出发城市",tdmTopVoyageFormDf.getDprtPt());
-                jsonObject.put("抵达城市",tdmTopVoyageFormDf.getArrPt());
-                jsonArray.put(jsonObject);
+                jsonObject.put("经度",hashMap.get(tdmTopVoyageFormDf.getArrPt()).getLongitude());
+                jsonObject.put("纬度",hashMap.get(tdmTopVoyageFormDf.getArrPt()).getLatitude());
+                jsonArray1.put(jsonObject);
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("出发城市",tdmTopVoyageFormDf.getDprtPt());
+                jsonObject1.put("经度",hashMap.get(tdmTopVoyageFormDf.getDprtPt()).getLongitude());
+                jsonObject1.put("纬度",hashMap.get(tdmTopVoyageFormDf.getDprtPt()).getLatitude());
+                jsonArray1.put(jsonObject1);
+                jsonArray.put(jsonArray1);
             }
             return jsonArray.toString();
         } catch (JSONException e) {
@@ -312,7 +328,9 @@ public class ForthController {
             }
             return jsonObject.toString();
         }
+
     }
+
 
 
 }
