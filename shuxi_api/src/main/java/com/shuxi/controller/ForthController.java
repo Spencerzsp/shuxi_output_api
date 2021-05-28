@@ -34,6 +34,8 @@ public class ForthController {
     private ITdmTopVoyageFormDfService tdmTopVoyageFormDfService;
     @Autowired
     private ITdmVoyageInfoService tdmVoyageInfoService;
+    @Autowired
+    private ITdmVoyageSheetService tdmVoyageSheetService;
     //2020年十佳航线
     //tdm_top_voyage_form_df
     @RequestMapping("/topVoyage2020")
@@ -241,8 +243,7 @@ public class ForthController {
         }
     }
 
-    @Autowired
-    private ITdmVoyageSheetService tdmVoyageSheetService;
+
     //运力、重量（货量）、占比（货量占总货量的占比）、同比（今年同期货量和去年同期的对比）
     //航线屏下方表格
     // tdm_voyage_sheet
@@ -283,5 +284,35 @@ public class ForthController {
 
     //西江流域航线图
     //2021年十佳航线
+    //tdmTopVoyageFormDfService
+    @RequestMapping("/voyageMainPicture")
+    public String voyageMainPicture(){
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+            String year = simpleDateFormat.format(new Date());
+            QueryWrapper<TdmTopVoyageFormDf> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("count_year",year);
+            List<TdmTopVoyageFormDf> tdmTopVoyageFormDfs = tdmTopVoyageFormDfService.list(queryWrapper);
+            JSONArray jsonArray = new JSONArray();
+            for (TdmTopVoyageFormDf tdmTopVoyageFormDf : tdmTopVoyageFormDfs) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("出发城市",tdmTopVoyageFormDf.getDprtPt());
+                jsonObject.put("抵达城市",tdmTopVoyageFormDf.getArrPt());
+                jsonArray.put(jsonObject);
+            }
+            return jsonArray.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
 
 }
