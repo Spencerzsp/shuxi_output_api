@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -637,6 +640,8 @@ public class MainScreenController {
             for (TdmBeidouOperationDataDf tdmBeidouOperationDataDf : tdmBeidouOperationDataDfs) {
                 jsonObject1.put("value",tdmBeidouOperationDataDf.getOftenLockageShipCount());
                 jsonObject1.put("unit","艘次");
+                //"description": "这是一段说明文字"
+                jsonObject1.put("description","365天内过闸次数不少于12次运力不小于800吨");
             }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
@@ -665,6 +670,7 @@ public class MainScreenController {
             for (TdmBeidouShipAmountDf tdmBeidouShipAmountDf : tdmBeidouShipAmountDfs) {
                 jsonObject1.put("value",tdmBeidouShipAmountDf.getAmount());
                 jsonObject1.put("unit","艘次");
+                jsonObject1.put("description","已安装北斗船载终端总数");
             }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
@@ -693,6 +699,7 @@ public class MainScreenController {
             for (TdmBeidouOperationDataDf tdmBeidouOperationDataDf : tdmBeidouOperationDataDfs) {
                 jsonObject1.put("value",tdmBeidouOperationDataDf.getOftenLockageTransportCapacity());
                 jsonObject1.put("unit","万吨");
+                jsonObject1.put("description","365天内过闸次数不少于12次运力不小于800吨的船舶核载数量合计");
             }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
@@ -724,6 +731,7 @@ public class MainScreenController {
 
                 jsonObject1.put("value",tdmBeidouShipAmountDf.getShipment());
                 jsonObject1.put("unit","万吨");
+                jsonObject1.put("description","已安装北斗船载终端总数的船舶核载数量合计");
             }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
@@ -747,9 +755,12 @@ public class MainScreenController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("label","2021年北斗报闸");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+            String year = simpleDateFormat.format(new Date());
+            jsonObject1.put("label",year+"年北斗报闸");
             jsonObject1.put("value",tdmThisYearShipLockageTypeDfDTO.getBdLockageCount());
             jsonObject1.put("unit","次");
+            jsonObject1.put("description",year+"年北斗报闸数量");
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
@@ -774,9 +785,12 @@ public class MainScreenController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("label","2021年窗口登记");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+            String year = simpleDateFormat.format(new Date());
+            jsonObject1.put("label",year+"年窗口登记");
             jsonObject1.put("value",tdmThisYearShipLockageTypeDfDTO.getCkLockageCount());
             jsonObject1.put("unit","次");
+            jsonObject1.put("description",year+"年窗口登记报闸数量");
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
@@ -792,6 +806,36 @@ public class MainScreenController {
         }
 
     }
+    public static Date getLastWeekMonday(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        // 获得当前日期是一个星期的第几天
+        int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
+        if (1 == dayWeek) {
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        // 获得当前日期是一个星期的第几天
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day-7);
+        return cal.getTime();
+    }
+    public static Date getLastWeekSunday(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        // 获得当前日期是一个星期的第几天
+        int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
+        if (1 == dayWeek) {
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        // 获得当前日期是一个星期的第几天
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day+6-7);
+        return cal.getTime();
+    }
     //上周运力指数
     @RequestMapping("/lastWeekCapacityRate")
     public String lastWeekCapacityRate(){
@@ -803,6 +847,12 @@ public class MainScreenController {
             jsonObject1.put("label","上周运力指数");
             jsonObject1.put("value",tdmLastWeekCapacityFreightRate.getLastWeekCapacityRate());
             jsonObject1.put("unit","");
+            Date monday = getLastWeekMonday(new Date());
+            Date sunday = getLastWeekSunday(new Date());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            String mondayString = simpleDateFormat.format(monday);
+            String sundayString = simpleDateFormat.format(sunday);
+            jsonObject1.put("description","上周（"+mondayString+"-"+sundayString+"）运力指数");
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
@@ -830,6 +880,12 @@ public class MainScreenController {
             jsonObject1.put("label","上周货运指数");
             jsonObject1.put("value",tdmLastWeekCapacityFreightRate.getLastWeekFreightRate());
             jsonObject1.put("unit","");
+            Date monday = getLastWeekMonday(new Date());
+            Date sunday = getLastWeekSunday(new Date());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            String mondayString = simpleDateFormat.format(monday);
+            String sundayString = simpleDateFormat.format(sunday);
+            jsonObject1.put("description","上周（"+mondayString+"-"+sundayString+"）货运指数");
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {

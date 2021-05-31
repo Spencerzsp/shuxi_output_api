@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -331,6 +329,93 @@ public class ForthController {
 
     }
 
+
+    //西江流域航线图城市点
+    //2021年十佳航线
+    @RequestMapping("/voyageMainPictureCity")
+    public String voyageMainPictureCity(){
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+            String year = simpleDateFormat.format(new Date());
+            QueryWrapper<TdmTopVoyageFormDf> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("count_year", year);
+            List<TdmTopVoyageFormDf> tdmTopVoyageFormDfs = tdmTopVoyageFormDfService.list(queryWrapper);
+            List<DimCityPosition> dimCityPositions = dimCityPositionService.list();
+            HashMap<String, DimCityPosition> hashMap = new HashMap<>();
+            dimCityPositions.stream().forEach(dimCityPosition -> hashMap.put(dimCityPosition.getCity(),dimCityPosition));
+            HashSet<DimCityPosition> hashSet = new HashSet<>();
+            tdmTopVoyageFormDfs.stream().forEach(tdmTopVoyageFormDf -> {
+                String arrPt = tdmTopVoyageFormDf.getArrPt();
+                String dprtPt = tdmTopVoyageFormDf.getDprtPt();
+                hashSet.add(hashMap.get(arrPt));
+                hashSet.add(hashMap.get(dprtPt));
+            });
+            JSONArray jsonArray = new JSONArray();
+            for (DimCityPosition dimCityPosition : hashSet) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("城市",dimCityPosition.getCity());
+                jsonObject.put("lon",dimCityPosition.getLongitude());
+                jsonObject.put("lat",dimCityPosition.getLatitude());
+                jsonArray.put(jsonObject);
+            }
+            return jsonArray.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+    //西江流域航线图城市路线
+    @RequestMapping("/voyageMainPicturePath")
+    public String voyageMainPicturePath(){
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+            String year = simpleDateFormat.format(new Date());
+            QueryWrapper<TdmTopVoyageFormDf> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("count_year", year);
+            List<TdmTopVoyageFormDf> tdmTopVoyageFormDfs = tdmTopVoyageFormDfService.list(queryWrapper);
+            List<DimCityPosition> dimCityPositions = dimCityPositionService.list();
+            HashMap<String, DimCityPosition> hashMap = new HashMap<>();
+            dimCityPositions.stream().forEach(dimCityPosition -> hashMap.put(dimCityPosition.getCity(),dimCityPosition));
+            JSONArray jsonArray = new JSONArray();
+            for (TdmTopVoyageFormDf tdmTopVoyageFormDf : tdmTopVoyageFormDfs) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("lon",120);
+                jsonObject.put("lat",30);
+                JSONArray jsonArray1 = new JSONArray();
+                JSONArray jsonArray2 = new JSONArray();
+                DimCityPosition startCity = hashMap.get(tdmTopVoyageFormDf.getDprtPt());
+                jsonArray2.put(startCity.getLongitude());
+                jsonArray2.put(startCity.getLatitude());
+                jsonArray1.put(jsonArray2);
+                JSONArray jsonArray3 = new JSONArray();
+                DimCityPosition endCity = hashMap.get(tdmTopVoyageFormDf.getArrPt());
+                jsonArray3.put(endCity.getLongitude());
+                jsonArray3.put(endCity.getLatitude());
+                jsonArray1.put(jsonArray3);
+                jsonObject.put("path",jsonArray1);
+                jsonArray.put(jsonObject);
+            }
+            return jsonArray.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
 
 
 }
