@@ -330,7 +330,7 @@ public class ForthController {
     }
 
 
-    //西江流域航线图城市点
+ /*   //西江流域航线图城市点
     //2021年十佳航线
     @RequestMapping("/voyageMainPictureCity")
     public String voyageMainPictureCity(){
@@ -370,9 +370,9 @@ public class ForthController {
             }
             return jsonObject.toString();
         }
-    }
+    }*/
 
-    //西江流域航线图城市路线
+/*    //西江流域航线图城市路线
     @RequestMapping("/voyageMainPicturePath")
     public String voyageMainPicturePath(){
         try {
@@ -404,6 +404,66 @@ public class ForthController {
                 jsonArray.put(jsonObject);
             }
             return jsonArray.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }*/
+
+    //西江流域航线图城市-新
+    @RequestMapping("/voyageMainPictureNew")
+    public String voyageMainPictureNew(){
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+            String year = simpleDateFormat.format(new Date());
+            QueryWrapper<TdmTopVoyageFormDf> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("count_year", year);
+            List<TdmTopVoyageFormDf> tdmTopVoyageFormDfs = tdmTopVoyageFormDfService.list(queryWrapper);
+            List<DimCityPosition> dimCityPositions = dimCityPositionService.list();
+            HashMap<String, DimCityPosition> hashMap = new HashMap<>();
+            dimCityPositions.stream().forEach(dimCityPosition -> hashMap.put(dimCityPosition.getCity(),dimCityPosition));
+            HashSet<DimCityPosition> hashSet = new HashSet<>();
+            tdmTopVoyageFormDfs.stream().forEach(tdmTopVoyageFormDf -> {
+                String arrPt = tdmTopVoyageFormDf.getArrPt();
+                String dprtPt = tdmTopVoyageFormDf.getDprtPt();
+                hashSet.add(hashMap.get(arrPt));
+                hashSet.add(hashMap.get(dprtPt));
+            });
+            JSONObject jsonObject = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            for (DimCityPosition dimCityPosition : hashSet) {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("name",dimCityPosition.getCity());
+                jsonObject1.put("long",Double.parseDouble(dimCityPosition.getLongitude()));
+                jsonObject1.put("lat",Double.parseDouble(dimCityPosition.getLatitude()));
+                jsonObject1.put("value",60);
+                jsonArray.put(jsonObject1);
+            }
+            jsonObject.put("points",jsonArray);
+            JSONArray jsonArray1 = new JSONArray();
+            for (TdmTopVoyageFormDf tdmTopVoyageFormDf : tdmTopVoyageFormDfs) {
+                JSONObject jsonObject1 = new JSONObject();
+                DimCityPosition arrCity = hashMap.get(tdmTopVoyageFormDf.getArrPt());
+                DimCityPosition drptCity = hashMap.get(tdmTopVoyageFormDf.getDprtPt());
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(Double.parseDouble(drptCity.getLongitude()));
+                jsonArray2.put(Double.parseDouble(drptCity.getLatitude()));
+                jsonObject1.put("from",jsonArray2);
+                JSONArray jsonArray3 = new JSONArray();
+                jsonArray3.put(Double.parseDouble(arrCity.getLongitude()));
+                jsonArray3.put(Double.parseDouble(arrCity.getLatitude()));
+                jsonObject1.put("to",jsonArray3);
+                jsonArray1.put(jsonObject1);
+            }
+            jsonObject.put("tracks",jsonArray1);
+            return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
             JSONObject jsonObject = new JSONObject();
