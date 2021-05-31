@@ -354,8 +354,8 @@ public class ForthController {
             for (DimCityPosition dimCityPosition : hashSet) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("城市",dimCityPosition.getCity());
-                jsonObject.put("lon",dimCityPosition.getLongitude());
-                jsonObject.put("lat",dimCityPosition.getLatitude());
+                jsonObject.put("lon",Double.parseDouble(dimCityPosition.getLongitude()));
+                jsonObject.put("lat",Double.parseDouble(dimCityPosition.getLatitude()));
                 jsonArray.put(jsonObject);
             }
             return jsonArray.toString();
@@ -392,13 +392,13 @@ public class ForthController {
                 JSONArray jsonArray1 = new JSONArray();
                 JSONArray jsonArray2 = new JSONArray();
                 DimCityPosition startCity = hashMap.get(tdmTopVoyageFormDf.getDprtPt());
-                jsonArray2.put(startCity.getLongitude());
-                jsonArray2.put(startCity.getLatitude());
+                jsonArray2.put(Double.parseDouble(startCity.getLongitude()));
+                jsonArray2.put(Double.parseDouble(startCity.getLatitude()));
                 jsonArray1.put(jsonArray2);
                 JSONArray jsonArray3 = new JSONArray();
                 DimCityPosition endCity = hashMap.get(tdmTopVoyageFormDf.getArrPt());
-                jsonArray3.put(endCity.getLongitude());
-                jsonArray3.put(endCity.getLatitude());
+                jsonArray3.put(Double.parseDouble(endCity.getLongitude()));
+                jsonArray3.put(Double.parseDouble(endCity.getLatitude()));
                 jsonArray1.put(jsonArray3);
                 jsonObject.put("path",jsonArray1);
                 jsonArray.put(jsonObject);

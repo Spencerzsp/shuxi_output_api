@@ -790,6 +790,46 @@ public class SecondScreenController {
     }
 
 
+    //调度中与排队中船舶数量
+    @RequestMapping("/schedulingShepAndQueuingShepCount")
+    public String schedulingShepAndQueuingShepCount(){
+        QueryWrapper<TdmEachShiplockLockageDf> queryWrapper = new QueryWrapper<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+        try {
+            String year = simpleDateFormat.format(new Date());
+            queryWrapper.eq("fz_year",year);
+            List<TdmEachShiplockLockageDf> tdmEachShiplockLockageDfs = tdmEachShiplockLockageDfService.list(queryWrapper);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("船闸");
+            jsonArray1.put("调度中船舶数量");
+            jsonArray1.put("排队中船舶数量");
+            jsonArray.put(jsonArray1);
+            for (TdmEachShiplockLockageDf tdmEachShiplockLockageDf : tdmEachShiplockLockageDfs) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmEachShiplockLockageDf.getSnid());
+                jsonArray2.put(tdmEachShiplockLockageDf.getSchedulingShipCount());
+                jsonArray2.put(tdmEachShiplockLockageDf.getQueuingShipCount());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
 
 
     @Autowired
