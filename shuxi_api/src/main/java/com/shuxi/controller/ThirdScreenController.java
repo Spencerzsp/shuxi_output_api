@@ -492,6 +492,90 @@ public class ThirdScreenController {
         }
     }
 
+    @Autowired
+    private IDimShowCityService dimShowCityService;
+    //城市收发货情况城市点
+    //tdm_top_goods_cloud_chart_df
+    @RequestMapping("/cityGetOrSendGoodsInfoByCityPosition")
+    public String cityGetOrSendGoodsInfoByCityPosition(){
+        try {
+            List<DimShowCity> dimShowCities = dimShowCityService.list();
+            JSONObject jsonObject = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            for (DimShowCity dimShowCity : dimShowCities) {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("name",dimShowCity.getCity());
+                jsonObject1.put("long",Double.parseDouble(dimShowCity.getLongitude()));
+                jsonObject1.put("lat",Double.parseDouble(dimShowCity.getLatitude()));
+                jsonObject1.put("value",60);
+                jsonArray.put(jsonObject1);
+            }
+            jsonObject.put("points",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
+    //城市收发货情况-过滤后
+    //tdm_top_goods_cloud_chart_df
+    @RequestMapping("/cityGetOrSendGoodsInfoByCity")
+    public String cityGetOrSendGoodsInfoByCity(){
+        try {
+            List<TdmTopGoodsCloudChartDfDTO> getOrSendGoodsInfo = tdmTopGoodsCloudChartDfService.getGetOrSendGoodsInfo();
+            List<DimShowCity> dimShowCities = dimShowCityService.list();
+            ArrayList<String> cities = new ArrayList<>();
+            dimShowCities.stream().forEach(dimShowCity -> {
+                cities.add(dimShowCity.getCity());
+            });
+            List<TdmTopGoodsCloudChartDfDTO> tdmTopGoodsCloudChartDfDTOS = getOrSendGoodsInfo.stream().filter(tdmTopGoodsCloudChartDfDTO -> {
+                String city = tdmTopGoodsCloudChartDfDTO.getCity();
+                if (cities.contains(city)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }).collect(Collectors.toList());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success",true);
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray1 = new JSONArray();
+            jsonArray1.put("城市");
+            jsonArray1.put("收货");
+            jsonArray1.put("发货");
+            jsonArray.put(jsonArray1);
+            for (TdmTopGoodsCloudChartDfDTO tdmTopGoodsCloudChartDfDTO : tdmTopGoodsCloudChartDfDTOS) {
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(tdmTopGoodsCloudChartDfDTO.getCity());
+                jsonArray2.put(tdmTopGoodsCloudChartDfDTO.getGetGoods());
+                jsonArray2.put(tdmTopGoodsCloudChartDfDTO.getSendGoods());
+                jsonArray.put(jsonArray2);
+            }
+            jsonObject.put("content",jsonArray);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
+
+            }
+            return jsonObject.toString();
+        }
+    }
+
+
 
 
 

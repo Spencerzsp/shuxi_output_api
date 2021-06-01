@@ -1,5 +1,6 @@
 package com.shuxi.controller;
 
+import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.shuxi.entity.*;
 import com.shuxi.service.IDimCityPositionService;
@@ -251,8 +252,8 @@ public class ForthController {
             JSONArray jsonArray = new JSONArray();
             JSONArray jsonArray1 = new JSONArray();
             jsonArray1.put("航线");
-            jsonArray1.put("运力");
-            jsonArray1.put("货量");
+            jsonArray1.put("运力(万吨)");
+            jsonArray1.put("货量(万吨)");
             jsonArray1.put("占比");
             jsonArray1.put("同比");
             jsonArray.put(jsonArray1);
@@ -261,8 +262,8 @@ public class ForthController {
                 jsonArray2.put(tdmVoyageSheet.getDprtPt()+"-"+tdmVoyageSheet.getArrPt());
                 jsonArray2.put(tdmVoyageSheet.getNclsCrryTns());
                 jsonArray2.put(tdmVoyageSheet.getCrgDdwghtTns());
-                jsonArray2.put(tdmVoyageSheet.getProportion());
-                jsonArray2.put(tdmVoyageSheet.getYearOnYearBasis());
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getProportion())*100,1)+"%");
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getYearOnYearBasis())*100,6)+"%");
                 jsonArray.put(jsonArray2);
             }
             return jsonArray.toString();
@@ -476,6 +477,9 @@ public class ForthController {
             return jsonObject.toString();
         }
     }
+
+
+
 
 
 }
