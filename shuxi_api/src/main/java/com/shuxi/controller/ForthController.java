@@ -477,7 +477,73 @@ public class ForthController {
             return jsonObject.toString();
         }
     }
+    //西江流域航线图城市-新2
+    @RequestMapping("/voyageMainPictureNew2")
+    public String voyageMainPictureNew2(){
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+            String year = simpleDateFormat.format(new Date());
+            QueryWrapper<TdmTopVoyageFormDf> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("count_year", year);
+            List<TdmTopVoyageFormDf> tdmTopVoyageFormDfs = tdmTopVoyageFormDfService.list(queryWrapper);
+            tdmTopVoyageFormDfs.sort(new Comparator<TdmTopVoyageFormDf>() {
+                @Override
+                public int compare(TdmTopVoyageFormDf o1, TdmTopVoyageFormDf o2) {
+                    return new Double(Double.parseDouble(o2.getCrgDdwghtTns())).compareTo(new Double(Double.parseDouble(o1.getCrgDdwghtTns())));
+                }
+            });
+            ArrayList<TdmTopVoyageFormDf> tdmTopVoyageFormDfs1 = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                tdmTopVoyageFormDfs1.add(tdmTopVoyageFormDfs.get(i));
+            }
+            List<DimCityPosition> dimCityPositions = dimCityPositionService.list();
+            HashMap<String, DimCityPosition> hashMap = new HashMap<>();
+            dimCityPositions.stream().forEach(dimCityPosition -> hashMap.put(dimCityPosition.getCity(),dimCityPosition));
+            HashSet<DimCityPosition> dimCityPositions1 = new HashSet<>();
+            for (TdmTopVoyageFormDf tdmTopVoyageFormDf : tdmTopVoyageFormDfs1) {
+                dimCityPositions1.add(hashMap.get(tdmTopVoyageFormDf.getArrPt()));
+                dimCityPositions1.add(hashMap.get(tdmTopVoyageFormDf.getDprtPt()));
+            }
+            JSONObject jsonObject = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            for (DimCityPosition dimCityPosition : dimCityPositions1) {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("name",dimCityPosition.getCity());
+                jsonObject1.put("long",Double.parseDouble(dimCityPosition.getLongitude()));
+                jsonObject1.put("lat",Double.parseDouble(dimCityPosition.getLatitude()));
+                jsonObject1.put("value",60);
+                jsonArray.put(jsonObject1);
+            }
+            jsonObject.put("points",jsonArray);
+            JSONArray jsonArray1 = new JSONArray();
+            for (TdmTopVoyageFormDf tdmTopVoyageFormDf : tdmTopVoyageFormDfs1) {
+                JSONObject jsonObject1 = new JSONObject();
+                DimCityPosition arrCity = hashMap.get(tdmTopVoyageFormDf.getArrPt());
+                DimCityPosition drptCity = hashMap.get(tdmTopVoyageFormDf.getDprtPt());
+                JSONArray jsonArray2 = new JSONArray();
+                jsonArray2.put(Double.parseDouble(drptCity.getLongitude()));
+                jsonArray2.put(Double.parseDouble(drptCity.getLatitude()));
+                jsonObject1.put("from",jsonArray2);
+                JSONArray jsonArray3 = new JSONArray();
+                jsonArray3.put(Double.parseDouble(arrCity.getLongitude()));
+                jsonArray3.put(Double.parseDouble(arrCity.getLatitude()));
+                jsonObject1.put("to",jsonArray3);
+                jsonArray1.put(jsonObject1);
+            }
+            jsonObject.put("tracks",jsonArray1);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("success",false);
+                jsonObject.put("message","数据获取失败");
+            } catch (JSONException jsonException) {
 
+            }
+            return jsonObject.toString();
+        }
+    }
 
 
 
