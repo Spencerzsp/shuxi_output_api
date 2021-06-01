@@ -6,6 +6,7 @@ import com.shuxi.dto.TdmThisYearShipLockageTypeDfDTO;
 import com.shuxi.dto.TdmXjLockageInfoDTO;
 import com.shuxi.entity.*;
 import com.shuxi.service.*;
+import io.swagger.annotations.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import java.util.List;
  * @Description TODO
  * @createTime 2021年05月21日 17:49:00
  */
+@Api(tags = "主屏接口")
 @RestController
 public class MainScreenController {
     @Autowired
@@ -53,6 +55,8 @@ public class MainScreenController {
     @Autowired
     private ITdmXjLockageInfoService tdmXjLockageInfoService;
     //西江流域（近一月）船舶吨位分布图
+    @ApiOperation(value = "西江流域（近一月）船舶吨位分布图",notes = "仅支持get请求")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
     @GetMapping("/valleyShipTonDistributing")
     public String valleyShipTonDistributing() {
         try {
@@ -61,12 +65,10 @@ public class MainScreenController {
             JSONArray jsonArray1 = new JSONArray();
             jsonArray1.put("label");
             jsonArray1.put("value");
-            jsonArray1.put("radius");
             jsonArray.put(jsonArray1);
             for (TdmShipTonnageDistributionDf tdmShipTonnageDistributionDf : tdmShipTonnageDistributionDfs) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmShipTonnageDistributionDf.getShipTonnage());
-                jsonArray2.put(1);
                 jsonArray2.put(Double.parseDouble(tdmShipTonnageDistributionDf.getAmount()));
                 jsonArray.put(jsonArray2);
             }
@@ -86,7 +88,10 @@ public class MainScreenController {
         }
     }
     //货运周指数(流域)
-    @RequestMapping("/freightWeeklyIndexByValley")
+    @ApiOperation(value = "货运周指数(流域)",notes = "仅支持get请求")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "valley",value = "流域",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/freightWeeklyIndexByValley")
     public String capacityWeekIndexByValley(@RequestParam String valley){
         QueryWrapper<TdmXjMainLineFreightRateDf> queryWrapper = new QueryWrapper<TdmXjMainLineFreightRateDf>().eq("target", "流域").eq("target_name",valley);
         List<TdmXjMainLineFreightRateDf> tdmXjMainLineFreightRateDfs = tdmXjMainLineFreightRateDfService.list(queryWrapper);
@@ -130,7 +135,12 @@ public class MainScreenController {
         }
     }
     //货运周指数(船闸)
-    @RequestMapping("/freightWeeklyIndexByShipLock")
+    @ApiOperation(value = "货运周指数(船闸)",notes = "仅支持get")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "shipLock",value = "船闸",required = true,paramType = "param",dataType = "String")
+    })
+    @GetMapping("/freightWeeklyIndexByShipLock")
     public String capacityWeekIndexByShipLock(@RequestParam String shipLock){
         QueryWrapper<TdmXjMainLineFreightRateDf> queryWrapper = new QueryWrapper<TdmXjMainLineFreightRateDf>().eq("target", "船闸").eq("target_name",shipLock);
         List<TdmXjMainLineFreightRateDf> tdmXjMainLineFreightRateDfs = tdmXjMainLineFreightRateDfService.list(queryWrapper);
@@ -175,7 +185,10 @@ public class MainScreenController {
     }
 
     //04 西江近年（历年整年）过闸数据(流域)
-    @RequestMapping("/passingDataInRecentYearsByVelley")
+    @ApiOperation(value = "西江近年（历年整年）过闸数据(流域)",tags = "西江近年（历年整年）过闸数据(流域)")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "valley",value = "流域",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/passingDataInRecentYearsByVelley")
     public String passingDataInRecentYearsByVelley(@RequestParam String valley){
         QueryWrapper<TdmRecentYearGateDf> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("show_dimension","流域").eq("dimension_values",valley);
@@ -216,7 +229,10 @@ public class MainScreenController {
     }
 
     //04 西江近年（历年整年）过闸数据(城市)
-    @RequestMapping("/passingDataInRecentYearsByCity")
+    @ApiOperation(value = "西江近年（历年整年）过闸数据(城市)",tags = "西江近年（历年整年）过闸数据(城市)")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "city",value = "城市",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/passingDataInRecentYearsByCity")
     public String passingDataInRecentYearsByCity(@RequestParam String city){
         QueryWrapper<TdmRecentYearGateDf> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("show_dimension","城市").eq("dimension_values",city);
@@ -257,7 +273,10 @@ public class MainScreenController {
     }
 
     //04 西江近年（历年整年）过闸数据(船闸)
-    @RequestMapping("/passingDataInRecentYearsByShipLock")
+    @ApiOperation(value = "西江近年（历年整年）过闸数据(船闸)",tags = "西江近年（历年整年）过闸数据(船闸)")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "shipLock",value = "船闸",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/passingDataInRecentYearsByShipLock")
     public String passingDataInRecentYearsByShipLock(@RequestParam String shipLock){
         QueryWrapper<TdmRecentYearGateDf> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("show_dimension","船闸").eq("dimension_values",shipLock);
@@ -297,7 +316,9 @@ public class MainScreenController {
         }
     }
     //下拉（流域）
-    @RequestMapping("/pullDownByVelley")
+    @ApiOperation(value = "下拉（流域）",tags = "下拉（流域）")
+    @ApiResponses(@ApiResponse(code = 200,message = "下拉流域列表json形式返回"))
+    @GetMapping("/pullDownByVelley")
     public String pullDownByVelly(){
         try {
             JSONObject jsonObject = new JSONObject();
@@ -338,7 +359,9 @@ public class MainScreenController {
     }
 
     //下拉（城市）
-    @RequestMapping("/pullDownByCity")
+    @ApiOperation(value = "下拉（城市）",tags = "下拉（城市）")
+    @ApiResponses(@ApiResponse(code = 200,message = "下拉城市列表json形式返回"))
+    @GetMapping("/pullDownByCity")
     public String pullDownByCity(){
         try {
             JSONObject jsonObject = new JSONObject();
@@ -388,6 +411,8 @@ public class MainScreenController {
 
 
     //下拉（船闸）
+    @ApiOperation(value = "下拉（船闸）",tags = "下拉（船闸）")
+    @ApiResponses(@ApiResponse(code = 200,message = "下拉船闸列表json形式返回"))
     @RequestMapping("/pullDownByShipLock")
     public String pullDownByShipLock(){
         try {

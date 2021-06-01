@@ -7,10 +7,12 @@ import com.shuxi.service.IDimCityPositionService;
 import com.shuxi.service.ITdmTopVoyageFormDfService;
 import com.shuxi.service.ITdmVoyageInfoService;
 import com.shuxi.service.ITdmVoyageSheetService;
+import io.swagger.annotations.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +26,7 @@ import java.util.*;
  * @Author: Yu Hao
  * DateTime: 2021-05-26 19:36
  */
+@Api(tags = "四屏接口")
 @RestController
 public class ForthController {
 
@@ -36,7 +39,9 @@ public class ForthController {
     private ITdmVoyageSheetService tdmVoyageSheetService;
     //2020年十佳航线
     //tdm_top_voyage_form_df
-    @RequestMapping("/topVoyage2020")
+    @ApiOperation(value = "2020年十佳航线",notes = "仅支持get请求")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @GetMapping("/topVoyage2020")
     public String topVoyage2020(){
         try {
             QueryWrapper<TdmTopVoyageFormDf> queryWrapper = new QueryWrapper<>();
@@ -75,7 +80,9 @@ public class ForthController {
 
     //2021年十佳航线
     //tdm_top_voyage_form_df
-    @RequestMapping("/topVoyage2021")
+    @ApiOperation(value = "2021年十佳航线",notes = "仅支持get")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @GetMapping("/topVoyage2021")
     public String topVoyage2021(){
         try {
             QueryWrapper<TdmTopVoyageFormDf> queryWrapper = new QueryWrapper<>();
@@ -126,7 +133,9 @@ public class ForthController {
 
     //tdm_voyage_info
     //航线总数
-    @RequestMapping("/totalVoyageNumber")
+    @ApiOperation(value = "航线总数",notes = "返回json")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @GetMapping("/totalVoyageNumber")
     public String totalVoyageNumber(){
         try {
             QueryWrapper<TdmVoyageInfo> queryWrapper = new QueryWrapper<>();
@@ -155,7 +164,9 @@ public class ForthController {
 
 
     //今年新增航线数
-    @RequestMapping("/newVoyageThisYear")
+    @ApiOperation(value = "今年新增航线数",notes = "返回json")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @GetMapping("/newVoyageThisYear")
     public String newVoyageThisYear(){
         try {
             QueryWrapper<TdmVoyageInfo> queryWrapper = new QueryWrapper<>();
@@ -184,7 +195,9 @@ public class ForthController {
 
 
     //广西发航线数
-    @RequestMapping("/gxVoyage")
+    @ApiOperation(value = "广西发航线数",notes = "返回json")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @GetMapping("/gxVoyage")
     public String gxVoyage(){
         try {
             QueryWrapper<TdmVoyageInfo> queryWrapper = new QueryWrapper<>();
@@ -214,7 +227,9 @@ public class ForthController {
 
 
     //广东发航线数
-    @RequestMapping("/gdVoyage")
+    @ApiOperation(value = "广东发航线数",notes = "返回json")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @GetMapping("/gdVoyage")
     public String gdVoyage(){
         try {
             QueryWrapper<TdmVoyageInfo> queryWrapper = new QueryWrapper<>();
@@ -245,7 +260,9 @@ public class ForthController {
     //运力、重量（货量）、占比（货量占总货量的占比）、同比（今年同期货量和去年同期的对比）
     //航线屏下方表格
     // tdm_voyage_sheet
-    @RequestMapping("/getTop30VoyageInfo")
+    @ApiOperation(value = "运力、重量（货量）、占比（货量占总货量的占比）、同比（今年同期货量和去年同期的对比）",notes = "航线屏下方表格")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @GetMapping("/getTop30VoyageInfo")
     public String getTop30VoyageInfo(){
         try {
             List<TdmVoyageSheet> tdmVoyageSheets = tdmVoyageSheetService.list();
@@ -263,7 +280,7 @@ public class ForthController {
                 jsonArray2.put(tdmVoyageSheet.getNclsCrryTns());
                 jsonArray2.put(tdmVoyageSheet.getCrgDdwghtTns());
                 jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getProportion())*100,1)+"%");
-                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getYearOnYearBasis())*100,6)+"%");
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getYearOnYearBasis())*100,2)+"%");
                 jsonArray.put(jsonArray2);
             }
             return jsonArray.toString();
@@ -285,7 +302,9 @@ public class ForthController {
     //tdmTopVoyageFormDfService
     @Autowired
     private IDimCityPositionService dimCityPositionService;
-    @RequestMapping("/voyageMainPicture")
+    @ApiOperation(value = "西江流域航线图,2021年十佳航线",notes = "旧版本")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @GetMapping("/voyageMainPicture")
     public String voyageMainPicture() {
         try {
             List<DimCityPosition> dimCityPositions = dimCityPositionService.list();
@@ -419,7 +438,9 @@ public class ForthController {
     }*/
 
     //西江流域航线图城市-新
-    @RequestMapping("/voyageMainPictureNew")
+    @ApiOperation(value = "西江流域航线图城市-新",notes = "西江流域航线图城市-新(显示前10的)")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @GetMapping("/voyageMainPictureNew")
     public String voyageMainPictureNew(){
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
@@ -478,7 +499,9 @@ public class ForthController {
         }
     }
     //西江流域航线图城市-新2
-    @RequestMapping("/voyageMainPictureNew2")
+    @ApiOperation(value = "西江流域航线图城市-新",notes = "西江流域航线图城市-新(显示前3的)")
+    @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
+    @GetMapping("/voyageMainPictureNew2")
     public String voyageMainPictureNew2(){
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");

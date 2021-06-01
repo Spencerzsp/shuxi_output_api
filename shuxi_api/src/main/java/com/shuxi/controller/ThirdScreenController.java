@@ -507,7 +507,7 @@ public class ThirdScreenController {
                 jsonObject1.put("name",dimShowCity.getCity());
                 jsonObject1.put("long",Double.parseDouble(dimShowCity.getLongitude()));
                 jsonObject1.put("lat",Double.parseDouble(dimShowCity.getLatitude()));
-                jsonObject1.put("value",60);
+                jsonObject1.put("value",6);
                 jsonArray.put(jsonObject1);
             }
             jsonObject.put("points",jsonArray);
