@@ -1,5 +1,6 @@
 package com.shuxi.controller;
 
+import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.shuxi.dto.TdmPastYearLokageBasinGoodsDfDTO;
 import com.shuxi.dto.TdmPastYearLokageBasinGoodsIncrementDfDTO;
@@ -595,8 +596,8 @@ public class ThirdScreenController {
             for (TdmTopGoodsCloudChartDfDTO tdmTopGoodsCloudChartDfDTO : tdmTopGoodsCloudChartDfDTOS) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmTopGoodsCloudChartDfDTO.getCity());
-                jsonArray2.put(tdmTopGoodsCloudChartDfDTO.getGetGoods());
-                jsonArray2.put(tdmTopGoodsCloudChartDfDTO.getSendGoods());
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmTopGoodsCloudChartDfDTO.getGetGoods())/10000,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmTopGoodsCloudChartDfDTO.getSendGoods())/10000,2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
