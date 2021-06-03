@@ -7,10 +7,12 @@ import com.shuxi.dto.TdmTopGoodsCloudChartDfDTO;
 import com.shuxi.entity.*;
 import com.shuxi.mapper.TdmPastYearLokageBasinGoodsIncreaseDfMapper;
 import com.shuxi.service.*;
+import io.swagger.annotations.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
  * @Author: Yu Hao
  * DateTime: 2021-05-26 11:50
  */
+@Api(tags = "三屏接口")
 @RestController
 public class ThirdScreenController {
     @Autowired
@@ -40,7 +43,9 @@ public class ThirdScreenController {
     private ITdmTopCityGoodsWeightsDfService tdmTopCityGoodsWeightsDfService;
     //2021年西江流域十佳发货地
     //tdm_recent_year_top_city_pie_df
-    @RequestMapping("/xjTopStartCity10")
+    @ApiOperation(value = "2021年西江流域十佳发货地",notes = "2021年西江流域十佳发货地")
+    @ApiResponses(@ApiResponse(code = 200,message = "2021年西江流域十佳发货地"))
+    @GetMapping("/xjTopStartCity10")
     public String xjTopStartCity10(){
         QueryWrapper<TdmTopCityFormDf> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("city_type","出发地");
@@ -78,7 +83,9 @@ public class ThirdScreenController {
 
     //2021年西江流域十佳收货地
     //tdm_recent_year_top_city_pie_df
-    @RequestMapping("/xjTopEndCity10")
+    @ApiOperation(value = "2021年西江流域十佳收货地",notes = "2021年西江流域十佳收货地")
+    @ApiResponses(@ApiResponse(code = 200,message = "2021年西江流域十佳收货地"))
+    @GetMapping("/xjTopEndCity10")
     public String xjTopEndCity10(){
         QueryWrapper<TdmTopCityFormDf> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("city_type","目的地");
@@ -114,7 +121,10 @@ public class ThirdScreenController {
 
 
     //2021年船闸上行货物分布（流域）
-        @RequestMapping("/thisYearUpGoodsDistributionByValley")
+    @ApiOperation(value = "2021年船闸上行货物分布（流域）",notes = "2021年船闸上行货物分布（流域）")
+    @ApiResponses(@ApiResponse(code = 200,message = "2021年船闸上行货物分布（流域）"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "valley",value = "船闸",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/thisYearUpGoodsDistributionByValley")
     public String thisYearUpGoodsDistributionByValley(@RequestParam String valley){
         QueryWrapper<TdmTopGoodsCloudChartDf> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("show_dimension","流域").eq("dimension_values",valley).eq("count_type","上行");
@@ -150,7 +160,10 @@ public class ThirdScreenController {
     }
 
     //2021年船闸下行货物分布（流域）
-    @RequestMapping("/thisYearDownGoodsDistributionByValley")
+    @ApiOperation(value = "2021年船闸下行货物分布（流域）",notes = "2021年船闸下行货物分布（流域）")
+    @ApiResponses(@ApiResponse(code = 200,message = "2021年船闸下行货物分布（流域）"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "valley",value = "流域",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/thisYearDownGoodsDistributionByValley")
     public String thisYearDownGoodsDistributionByValley(@RequestParam String valley){
         QueryWrapper<TdmTopGoodsCloudChartDf> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("show_dimension","流域").eq("dimension_values",valley).eq("count_type","下行");
@@ -186,7 +199,10 @@ public class ThirdScreenController {
     }
 
     //2021年船闸上行货物分布（船闸）
-    @RequestMapping("/thisYearUpGoodsDistributionByShipLock")
+    @ApiOperation(value = "2021年船闸上行货物分布（船闸）",notes = "2021年船闸上行货物分布（船闸）")
+    @ApiResponses(@ApiResponse(code = 200,message = "2021年船闸上行货物分布（船闸）"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "shipLock",value = "船闸",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/thisYearUpGoodsDistributionByShipLock")
     public String thisYearUpGoodsDistributionByShipLock(@RequestParam String shipLock){
         QueryWrapper<TdmTopGoodsCloudChartDf> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("show_dimension","船闸").eq("dimension_values",shipLock).eq("count_type","上行");
@@ -222,7 +238,10 @@ public class ThirdScreenController {
     }
 
     //2021年船闸下行货物分布（船闸）
-    @RequestMapping("/thisYearDownGoodsDistributionByShipLock")
+    @ApiOperation(value = "2021年船闸下行货物分布（船闸）",notes = "2021年船闸下行货物分布（船闸）")
+    @ApiResponses(@ApiResponse(code = 200,message = "2021年船闸下行货物分布（船闸）"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "shipLock",value = "船闸",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/thisYearDownGoodsDistributionByShipLock")
     public String thisYearDownGoodsDistributionByShipLock(@RequestParam String shipLock){
         QueryWrapper<TdmTopGoodsCloudChartDf> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("show_dimension","船闸").eq("dimension_values",shipLock).eq("count_type","下行");
@@ -262,7 +281,10 @@ public class ThirdScreenController {
     private ITdmPastYearLokageBasinGoodsDfService tdmPastYearLokageBasinGoodsDfService;
     //流域货运量趋势图（过去一年）(流域)
     //tdm_past_year_lokage_basin_goods_increase_df
-    @RequestMapping("/freightTrafficTrendByValley")
+    @ApiOperation(value = "2流域货运量趋势图（过去一年）(流域)",notes = "流域货运量趋势图（过去一年）(流域)")
+    @ApiResponses(@ApiResponse(code = 200,message = "流域货运量趋势图（过去一年）(流域)"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "valley",value = "流域",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/freightTrafficTrendByValley")
     public String freightTrafficTrendByValley(@RequestParam String valley){
         try {
             List<TdmPastYearLokageBasinGoodsDfDTO> tdmPastYearLokageBasinGoodsDfServiceUpAndDownCrgDdwghtTns = tdmPastYearLokageBasinGoodsDfService.getUpAndDownCrgDdwghtTns();
@@ -302,7 +324,10 @@ public class ThirdScreenController {
 
     //流域货运量趋势图（过去一年）(船闸)
     //tdm_past_year_lokage_basin_goods_increase_df
-    @RequestMapping("/freightTrafficTrendByShipLock")
+    @ApiOperation(value = "2流域货运量趋势图（过去一年）(船闸)",notes = "流域货运量趋势图（过去一年）(船闸)")
+    @ApiResponses(@ApiResponse(code = 200,message = "流域货运量趋势图（过去一年）(船闸)"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "shipLock",value = "船闸",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/freightTrafficTrendByShipLock")
     public String freightTrafficTrendByShipLock(@RequestParam String shipLock){
         try {
             List<TdmPastYearLokageBasinGoodsDfDTO> tdmPastYearLokageBasinGoodsDfServiceUpAndDownCrgDdwghtTns = tdmPastYearLokageBasinGoodsDfService.getUpAndDownCrgDdwghtTns();
@@ -342,7 +367,10 @@ public class ThirdScreenController {
 
     //流域货运量同比变化（过去一年）（流域）
     //tdm_past_year_lokage_basin_goods_increase_df
-    @RequestMapping("/freightTrafficTrendIncrementByValley")
+    @ApiOperation(value = "流域货运量同比变化（过去一年）（流域）",notes = "流域货运量趋势图（过去一年）(流域)")
+    @ApiResponses(@ApiResponse(code = 200,message = "流域货运量趋势图（过去一年）(流域)"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "valley",value = "流域",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/freightTrafficTrendIncrementByValley")
     public String freightTrafficTrendIncrementByValley(@RequestParam String valley){
         try {
             List<TdmPastYearLokageBasinGoodsIncrementDfDTO> tdmPastYearLokageBasinGoodsIncreaseDfServiceUpAndDownCrgDdwghtTns = tdmPastYearLokageBasinGoodsIncreaseDfService.getUpAndDownCrgDdwghtTns();
@@ -381,7 +409,10 @@ public class ThirdScreenController {
 
     //流域货运量同比变化（过去一年）（船闸）
     //tdm_past_year_lokage_basin_goods_increase_df
-    @RequestMapping("/freightTrafficTrendIncrementByShipLock")
+    @ApiOperation(value = "流域货运量同比变化（过去一年）（船闸）",notes = "流域货运量趋势图（过去一年）(船闸)")
+    @ApiResponses(@ApiResponse(code = 200,message = "流域货运量趋势图（过去一年）(船闸)"))
+    @ApiImplicitParams(@ApiImplicitParam(name = "shipLock",value = "船闸",required = true,paramType = "param",dataType = "String"))
+    @GetMapping("/freightTrafficTrendIncrementByShipLock")
     public String freightTrafficTrendIncrementByShipLock(@RequestParam String shipLock){
         try {
             List<TdmPastYearLokageBasinGoodsIncrementDfDTO> tdmPastYearLokageBasinGoodsIncreaseDfServiceUpAndDownCrgDdwghtTns = tdmPastYearLokageBasinGoodsIncreaseDfService.getUpAndDownCrgDdwghtTns();
@@ -421,7 +452,9 @@ public class ThirdScreenController {
 
     //2021年热门城市收发货
     //tdm_top_city_goods_weights_df
-    @RequestMapping("/hotCityGoodsWeights")
+    @ApiOperation(value = "2021年热门城市收发货",notes = "2021年热门城市收发货")
+    @ApiResponses(@ApiResponse(code = 200,message = "2021年热门城市收发货"))
+    @GetMapping("/hotCityGoodsWeights")
     public String hotCityGoodsWeights(){
         try {
             List<TdmTopCityGoodsWeightsDf> tdmTopCityGoodsWeightsDfs = tdmTopCityGoodsWeightsDfService.list();
@@ -458,7 +491,9 @@ public class ThirdScreenController {
 
     //城市收发货情况
     //tdm_top_goods_cloud_chart_df
-    @RequestMapping("/cityGetOrSendGoodsInfo")
+    @ApiOperation(value = "城市收发货情况",notes = "城市收发货情况")
+    @ApiResponses(@ApiResponse(code = 200,message = "城市收发货情况"))
+    @GetMapping("/cityGetOrSendGoodsInfo")
     public String cityGetOrSendGoodsInfo(){
         try {
             List<TdmTopGoodsCloudChartDfDTO> getOrSendGoodsInfo = tdmTopGoodsCloudChartDfService.getGetOrSendGoodsInfo();
@@ -496,7 +531,9 @@ public class ThirdScreenController {
     private IDimShowCityService dimShowCityService;
     //城市收发货情况城市点
     //tdm_top_goods_cloud_chart_df
-    @RequestMapping("/cityGetOrSendGoodsInfoByCityPosition")
+    @ApiOperation(value = "城市收发货情况城市点",notes = "城市收发货情况城市点")
+    @ApiResponses(@ApiResponse(code = 200,message = "城市收发货情况城市点"))
+    @GetMapping("/cityGetOrSendGoodsInfoByCityPosition")
     public String cityGetOrSendGoodsInfoByCityPosition(){
         try {
             List<DimShowCity> dimShowCities = dimShowCityService.list();
@@ -528,6 +565,8 @@ public class ThirdScreenController {
 
     //城市收发货情况-过滤后
     //tdm_top_goods_cloud_chart_df
+    @ApiOperation(value = "城市收发货情况-过滤后",notes = "城市收发货情况-过滤后")
+    @ApiResponses(@ApiResponse(code = 200,message = "城市收发货情况-过滤后"))
     @RequestMapping("/cityGetOrSendGoodsInfoByCity")
     public String cityGetOrSendGoodsInfoByCity(){
         try {

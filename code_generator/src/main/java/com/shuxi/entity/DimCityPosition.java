@@ -3,6 +3,7 @@ package com.shuxi.entity;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -32,6 +33,7 @@ public class DimCityPosition implements Serializable {
      * 纬度
      */
     private String latitude;
+
 
 
 }

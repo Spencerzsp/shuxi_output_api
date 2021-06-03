@@ -3,7 +3,7 @@
 <mapper namespace="com.shuxi.mapper.TdmTopGoodsCloudChartDfMapper">
     <select id="getGetOrSendGoodsInfo" resultType="com.shuxi.dto.TdmTopGoodsCloudChartDfDTO">
         select
-            get_table.dimension_values,get_table.crg_ddwght_tns,send_table.crg_ddwght_tns
+            get_table.dimension_values city,get_table.crg_ddwght_tns get_goods,send_table.crg_ddwght_tns send_goods
         from
             (
                 select show_dimension,dimension_values,count_type,sum(crg_ddwght_tns) crg_ddwght_tns

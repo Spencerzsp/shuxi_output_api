@@ -1,5 +1,6 @@
 package com.shuxi.controller;
 
+import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.shuxi.dto.TdmPaymentMethodDistributionDfDTO;
 import com.shuxi.dto.TdmThisYearEachShiplockForecastDfDTO;
@@ -375,8 +376,8 @@ public class SecondScreenController {
             for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastTotTon());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualTotTon());
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getForecastTotTon())/10000,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getActualTotTon())/10000,2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -414,8 +415,8 @@ public class SecondScreenController {
             for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastNclsCrryTns());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualNclsCrryTns());
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getForecastNclsCrryTns())/10000,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getActualNclsCrryTns())/10000,2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -454,8 +455,8 @@ public class SecondScreenController {
             for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastCrgDdwghtTns());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualCrgDdwghtTns());
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getForecastCrgDdwghtTns())/10000,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getActualCrgDdwghtTns())/10000,2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -533,8 +534,8 @@ public class SecondScreenController {
             for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastTotTon());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualTotTon());
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getForecastTotTon())/10000,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getActualTotTon())/10000,2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -573,8 +574,8 @@ public class SecondScreenController {
             for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastNclsCrryTns());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualNclsCrryTns());
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getForecastNclsCrryTns())/10000,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getActualNclsCrryTns())/10000,2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -613,8 +614,8 @@ public class SecondScreenController {
             for (TdmThisYearEachShiplockForecastDfDTO tdmThisYearEachShiplockForecastDfDTO : tdmThisYearEachShiplockForecastDfDTOS) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getDataType());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getForecastCrgDdwghtTns());
-                jsonArray2.put(tdmThisYearEachShiplockForecastDfDTO.getActualCrgDdwghtTns());
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getForecastCrgDdwghtTns())/10000,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmThisYearEachShiplockForecastDfDTO.getActualCrgDdwghtTns())/10000,2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
