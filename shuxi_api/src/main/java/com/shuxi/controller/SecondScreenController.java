@@ -208,7 +208,8 @@ public class SecondScreenController {
             jsonArray.put(jsonArray1);
             for (TdmThisYearEachMonthLockageDf tdmThisYearEachMonthLockageDf : tdmThisYearEachMonthLockageDfs) {
                 JSONArray jsonArray2 = new JSONArray();
-                jsonArray2.put(year+"/"+tdmThisYearEachMonthLockageDf.getFzMonth());
+                //jsonArray2.put(year+"/"+tdmThisYearEachMonthLockageDf.getFzMonth());
+                jsonArray2.put(tdmThisYearEachMonthLockageDf.getFzMonth());
                 jsonArray2.put(tdmThisYearEachMonthLockageDf.getTotTon());
                 jsonArray2.put(tdmThisYearEachMonthLockageDf.getNclsCrryTns());
                 jsonArray2.put(tdmThisYearEachMonthLockageDf.getCrgDdwghtTns());
@@ -293,7 +294,8 @@ public class SecondScreenController {
             jsonArray.put(jsonArray1);
             for (TdmThisYearEachMonthLockageDf tdmThisYearEachMonthLockageDf : tdmThisYearEachMonthLockageDfs) {
                 JSONArray jsonArray2 = new JSONArray();
-                jsonArray2.put(year+"/"+tdmThisYearEachMonthLockageDf.getFzMonth());
+                //jsonArray2.put(year+"/"+tdmThisYearEachMonthLockageDf.getFzMonth());
+                jsonArray2.put(tdmThisYearEachMonthLockageDf.getFzMonth());
                 jsonArray2.put(Double.parseDouble(tdmThisYearEachMonthLockageDf.getTotTonIncrease())+1);
                 jsonArray2.put(Double.parseDouble(tdmThisYearEachMonthLockageDf.getNclsCrryTns())+1);
                 jsonArray2.put(Double.parseDouble(tdmThisYearEachMonthLockageDf.getCrgDdwghtTns())+1);
@@ -694,8 +696,8 @@ public class SecondScreenController {
             for (TdmPaymentMethodDistributionDfDTO tdmPaymentMethodDistributionDfDTO : onlineAndTotal) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmPaymentMethodDistributionDfDTO.getSnid());
-                jsonArray2.put(tdmPaymentMethodDistributionDfDTO.getOnLinePayCount());
-                jsonArray2.put(tdmPaymentMethodDistributionDfDTO.getTotalPayCount());
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmPaymentMethodDistributionDfDTO.getOnLinePayCount())/10000,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmPaymentMethodDistributionDfDTO.getTotalPayCount())/10000,2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -853,9 +855,9 @@ public class SecondScreenController {
             for (TdmShipLockageEfficientAnalyse tdmShipLockageEfficientAnalysis : tdmShipLockageEfficientAnalyses) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmShipLockageEfficientAnalysis.getSnid());
-                jsonArray2.put(tdmShipLockageEfficientAnalysis.getMaxTime());
-                jsonArray2.put(tdmShipLockageEfficientAnalysis.getMinTime());
-                jsonArray2.put(tdmShipLockageEfficientAnalysis.getAvgTime());
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmShipLockageEfficientAnalysis.getMaxTime())/60,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmShipLockageEfficientAnalysis.getMinTime())/60,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmShipLockageEfficientAnalysis.getAvgTime())/60,2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);

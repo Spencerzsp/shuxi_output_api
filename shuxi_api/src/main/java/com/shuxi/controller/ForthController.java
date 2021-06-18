@@ -147,6 +147,7 @@ public class ForthController {
             jsonObject1.put("unit","条");
             jsonObject1.put("label","航线总数");
             jsonObject1.put("value",tdmVoyageInfo.getTargetValue());
+            jsonObject1.put("description","历史累计的航线数量");
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
@@ -178,6 +179,7 @@ public class ForthController {
             jsonObject1.put("unit","条");
             jsonObject1.put("label","今年新增航线数");
             jsonObject1.put("value",tdmVoyageInfo.getTargetValue());
+            jsonObject1.put("description","今年新增的航线数量");
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
@@ -209,6 +211,7 @@ public class ForthController {
             jsonObject1.put("unit","条");
             jsonObject1.put("label","广西发航线数");
             jsonObject1.put("value",tdmVoyageInfo.getTargetValue());
+            jsonObject1.put("description","广西发往广东的航线数量");
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
@@ -241,6 +244,7 @@ public class ForthController {
             jsonObject1.put("unit","条");
             jsonObject1.put("label","广东发航线数");
             jsonObject1.put("value",tdmVoyageInfo.getTargetValue());
+            jsonObject1.put("description","广东发往广西的航线数量");
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
