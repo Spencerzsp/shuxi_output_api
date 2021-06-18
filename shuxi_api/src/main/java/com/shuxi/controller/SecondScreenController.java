@@ -696,8 +696,8 @@ public class SecondScreenController {
             for (TdmPaymentMethodDistributionDfDTO tdmPaymentMethodDistributionDfDTO : onlineAndTotal) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmPaymentMethodDistributionDfDTO.getSnid());
-                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmPaymentMethodDistributionDfDTO.getOnLinePayCount())/10000,2));
-                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmPaymentMethodDistributionDfDTO.getTotalPayCount())/10000,2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmPaymentMethodDistributionDfDTO.getOnLinePayCount()),2));
+                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmPaymentMethodDistributionDfDTO.getTotalPayCount()),2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);

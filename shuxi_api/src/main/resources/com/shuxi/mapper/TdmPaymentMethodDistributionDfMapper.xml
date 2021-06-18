@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shuxi.mapper.TdmPaymentMethodDistributionDfMapper">
     <select id="getOnlineAndTotal" resultType="com.shuxi.dto.TdmPaymentMethodDistributionDfDTO">
-        select snid,e_pay_count+wx_zfb_count,total_count from tdm_payment_method_distribution_df
+        select snid,e_pay_amount+wx_zfb_amount,total_amount from tdm_payment_method_distribution_df
         where snid!='总览'
     </select>
 </mapper>
