@@ -297,9 +297,9 @@ public class SecondScreenController {
                 //jsonArray2.put(year+"/"+tdmThisYearEachMonthLockageDf.getFzMonth());
                 jsonArray2.put(tdmThisYearEachMonthLockageDf.getFzMonth());
                 jsonArray2.put(Double.parseDouble(tdmThisYearEachMonthLockageDf.getTotTonIncrease())+1);
-                jsonArray2.put(Double.parseDouble(tdmThisYearEachMonthLockageDf.getNclsCrryTns())+1);
-                jsonArray2.put(Double.parseDouble(tdmThisYearEachMonthLockageDf.getCrgDdwghtTns())+1);
-                jsonArray2.put(Double.parseDouble(tdmThisYearEachMonthLockageDf.getCzCount())+1);
+                jsonArray2.put(Double.parseDouble(tdmThisYearEachMonthLockageDf.getNclsCrryTnsIncrease())+1);
+                jsonArray2.put(Double.parseDouble(tdmThisYearEachMonthLockageDf.getCrgDdwghtTnsIncrease())+1);
+                jsonArray2.put(Double.parseDouble(tdmThisYearEachMonthLockageDf.getCzCountIncrease())+1);
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);

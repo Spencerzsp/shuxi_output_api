@@ -1,5 +1,5 @@
 server:
-  port: 8925
+  port: 5678
   servlet:
     context-path: /xijiang
 spring:
