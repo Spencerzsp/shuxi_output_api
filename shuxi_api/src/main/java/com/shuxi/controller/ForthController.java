@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -261,6 +262,21 @@ public class ForthController {
     }
 
 
+    public static String roundByScale(double v, int scale) {
+        if (scale < 0) {
+            throw new IllegalArgumentException(
+                    "The   scale   must   be   a   positive   integer   or   zero");
+        }
+        if(scale == 0){
+            return new DecimalFormat("0").format(v);
+        }
+        String formatStr = "0.";
+        for(int i=0;i<scale;i++){
+            formatStr = formatStr + "0";
+        }
+        return new DecimalFormat(formatStr).format(v);
+    }
+
     //运力、重量（货量）、占比（货量占总货量的占比）、同比（今年同期货量和去年同期的对比）
     //航线屏下方表格
     // tdm_voyage_sheet
@@ -278,11 +294,12 @@ public class ForthController {
             jsonArray1.put("占比");
             jsonArray1.put("同比");
             jsonArray.put(jsonArray1);
+            DecimalFormat decimalFormat = new DecimalFormat("0.00#");
             for (TdmVoyageSheet tdmVoyageSheet : tdmVoyageSheets) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmVoyageSheet.getDprtPt()+"-"+tdmVoyageSheet.getArrPt());
-                jsonArray2.put(tdmVoyageSheet.getNclsCrryTns());
-                jsonArray2.put(tdmVoyageSheet.getCrgDdwghtTns());
+                jsonArray2.put(decimalFormat.format(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getNclsCrryTns())/10000,2)));
+                jsonArray2.put(decimalFormat.format(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getCrgDdwghtTns())/10000,2)));
                 jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getProportion())*100,1)+"%");
                 jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getYearOnYearBasis())*100,2)+"%");
                 jsonArray.put(jsonArray2);

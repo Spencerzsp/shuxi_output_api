@@ -95,7 +95,7 @@ public class MainScreenController {
     @ApiImplicitParams(@ApiImplicitParam(name = "valley",value = "流域",required = true,paramType = "param",dataType = "String"))
     @GetMapping("/freightWeeklyIndexByValley")
     public String capacityWeekIndexByValley(@RequestParam String valley){
-        QueryWrapper<TdmXjMainLineFreightRateDf> queryWrapper = new QueryWrapper<TdmXjMainLineFreightRateDf>().eq("target", "流域").eq("target_name",valley);
+        QueryWrapper<TdmXjMainLineFreightRateDf> queryWrapper = new QueryWrapper<TdmXjMainLineFreightRateDf>().eq("target", "流域").eq("target_name",valley).orderByAsc("month_date");
         List<TdmXjMainLineFreightRateDf> tdmXjMainLineFreightRateDfs = tdmXjMainLineFreightRateDfService.list(queryWrapper);
         tdmXjMainLineFreightRateDfs.sort(new Comparator<TdmXjMainLineFreightRateDf>() {
             @Override
@@ -144,7 +144,7 @@ public class MainScreenController {
     })
     @GetMapping("/freightWeeklyIndexByShipLock")
     public String capacityWeekIndexByShipLock(@RequestParam String shipLock){
-        QueryWrapper<TdmXjMainLineFreightRateDf> queryWrapper = new QueryWrapper<TdmXjMainLineFreightRateDf>().eq("target", "船闸").eq("target_name",shipLock);
+        QueryWrapper<TdmXjMainLineFreightRateDf> queryWrapper = new QueryWrapper<TdmXjMainLineFreightRateDf>().eq("target", "船闸").eq("target_name",shipLock).orderByAsc("month_date");
         List<TdmXjMainLineFreightRateDf> tdmXjMainLineFreightRateDfs = tdmXjMainLineFreightRateDfService.list(queryWrapper);
         tdmXjMainLineFreightRateDfs.sort(new Comparator<TdmXjMainLineFreightRateDf>() {
             @Override

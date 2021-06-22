@@ -191,7 +191,7 @@ public class SecondScreenController {
     @RequestMapping("/thisYearShipLockageByMonth")
     public String thisYearShipLockageByMonth(@RequestParam String shipLock){
         QueryWrapper<TdmThisYearEachMonthLockageDf> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("snid",shipLock);
+        queryWrapper.eq("snid",shipLock).orderByAsc("fz_month");
         try {
             List<TdmThisYearEachMonthLockageDf> tdmThisYearEachMonthLockageDfs = tdmThisYearEachMonthLockageDfService.list(queryWrapper);
             JSONObject jsonObject = new JSONObject();
@@ -277,7 +277,7 @@ public class SecondScreenController {
     @RequestMapping("/thisYearEachMonthLockage")
     public String thisYearEachMonthLockage(@RequestParam String shipLock){
         QueryWrapper<TdmThisYearEachMonthLockageDf> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("snid",shipLock);
+        queryWrapper.eq("snid",shipLock).orderByAsc("fz_month");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
         String year = simpleDateFormat.format(new Date());
         try {
@@ -657,6 +657,9 @@ public class SecondScreenController {
             jsonArray1.put("实际过闸数");
             jsonArray.put(jsonArray1);
             for (TdmShipGateWayCountDf tdmShipGateWayCountDf : tdmShipGateWayCountDfs) {
+                if (tdmShipGateWayCountDf.getSnid().equals("总览")) {
+                    continue;
+                }
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmShipGateWayCountDf.getSnid());
                 jsonArray2.put(tdmShipGateWayCountDf.getBeidouCount());
