@@ -69,6 +69,9 @@ public class MainScreenController {
             jsonArray1.put("value");
             jsonArray.put(jsonArray1);
             for (TdmShipTonnageDistributionDf tdmShipTonnageDistributionDf : tdmShipTonnageDistributionDfs) {
+                if (tdmShipTonnageDistributionDf.getShipTonnage()==null){
+                    continue;
+                }
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmShipTonnageDistributionDf.getShipTonnage());
                 jsonArray2.put(Double.parseDouble(tdmShipTonnageDistributionDf.getAmount()));
