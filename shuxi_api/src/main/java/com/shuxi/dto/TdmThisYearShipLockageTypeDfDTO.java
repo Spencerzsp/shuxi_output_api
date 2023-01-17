@@ -13,7 +13,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class TdmThisYearShipLockageTypeDfDTO {
-    private String showType;
+    private String showType; // 本年月
+    private String lockName;
     private String bdLockageCount;
     private String ckLockageCount;
     private String totoalLockageCount;

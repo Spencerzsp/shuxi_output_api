@@ -7,5 +7,6 @@
         join tdm_past_year_lokage_basin_goods_df down_table
         on up_table.show_dimension=down_table.show_dimension and up_table.fz_date=down_table.fz_date and up_table.dimension_values=down_table.dimension_values
         where up_table.curs_cd='上行' and down_table.curs_cd='下行'
+        order by up_table.fz_date
     </select>
 </mapper>

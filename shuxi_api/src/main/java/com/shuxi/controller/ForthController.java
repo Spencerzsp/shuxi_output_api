@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.DecimalFormat;
@@ -283,12 +284,13 @@ public class ForthController {
     @ApiOperation(value = "运力、重量（货量）、占比（货量占总货量的占比）、同比（今年同期货量和去年同期的对比）",notes = "航线屏下方表格")
     @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
     @GetMapping("/getTop30VoyageInfo")
-    public String getTop30VoyageInfo(){
+    public String getTop30VoyageInfo(@RequestParam String type){
         try {
             List<TdmVoyageSheet> tdmVoyageSheets = tdmVoyageSheetService.list();
             JSONArray jsonArray = new JSONArray();
             JSONArray jsonArray1 = new JSONArray();
             jsonArray1.put("航线");
+//            jsonArray1.put(type);
             jsonArray1.put("运力(万吨)");
             jsonArray1.put("货量(万吨)");
             jsonArray1.put("占比");
@@ -296,13 +298,35 @@ public class ForthController {
             jsonArray.put(jsonArray1);
             DecimalFormat decimalFormat = new DecimalFormat("0.00#");
             for (TdmVoyageSheet tdmVoyageSheet : tdmVoyageSheets) {
+
                 JSONArray jsonArray2 = new JSONArray();
-                jsonArray2.put(tdmVoyageSheet.getDprtPt()+"-"+tdmVoyageSheet.getArrPt());
-                jsonArray2.put(decimalFormat.format(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getNclsCrryTns())/10000,2)));
-                jsonArray2.put(decimalFormat.format(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getCrgDdwghtTns())/10000,2)));
-                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getProportion())*100,1)+"%");
-                jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getYearOnYearBasis())*100,2)+"%");
-                jsonArray.put(jsonArray2);
+
+                if (type.equals("上行") && tdmVoyageSheet.getCursCd().equals(type)){
+                    jsonArray2.put(tdmVoyageSheet.getDprtPt()+"-"+tdmVoyageSheet.getArrPt());
+                    jsonArray2.put(decimalFormat.format(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getNclsCrryTns())/10000,2)));
+                    jsonArray2.put(decimalFormat.format(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getCrgDdwghtTns())/10000,2)));
+                    jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getProportion())*100,1)+"%");
+                    jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getYearOnYearBasis())*100,2)+"%");
+                    jsonArray.put(jsonArray2);
+                }
+                if (type.equals("下行") && tdmVoyageSheet.getCursCd().equals(type)){
+                    jsonArray2.put(tdmVoyageSheet.getDprtPt()+"-"+tdmVoyageSheet.getArrPt());
+                    jsonArray2.put(decimalFormat.format(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getNclsCrryTns())/10000,2)));
+                    jsonArray2.put(decimalFormat.format(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getCrgDdwghtTns())/10000,2)));
+                    jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getProportion())*100,1)+"%");
+                    jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getYearOnYearBasis())*100,2)+"%");
+                    jsonArray.put(jsonArray2);
+                }
+
+                if (type.equals("不分航向")){
+                    jsonArray2.put(tdmVoyageSheet.getDprtPt()+"-"+tdmVoyageSheet.getArrPt());
+                    jsonArray2.put(decimalFormat.format(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getNclsCrryTns())/10000,2)));
+                    jsonArray2.put(decimalFormat.format(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getCrgDdwghtTns())/10000,2)));
+                    jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getProportion())*100,1)+"%");
+                    jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmVoyageSheet.getYearOnYearBasis())*100,2)+"%");
+                    jsonArray.put(jsonArray2);
+                }
+
             }
             return jsonArray.toString();
         } catch (Exception e) {

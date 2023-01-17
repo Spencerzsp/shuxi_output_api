@@ -18,6 +18,10 @@ import java.io.Serializable;
 public class TdmThisYearShipLockageTypeDf implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * 船闸名称
+     */
+    private String lockName;
 
     /**
      * 本年/本月

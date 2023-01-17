@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shuxi.mapper.TdmThisYearShipLockageTypeDfMapper">
     <select id="getThisYearBdLockageCount" resultType="com.shuxi.dto.TdmThisYearShipLockageTypeDfDTO">
-        select show_type,sum(bd_lockage_count),sum(ck_lockage_count),sum(totoal_lockage_count) from tdm_this_year_ship_lockage_type_df where show_type='本年' group by show_type;
+<!--        select show_type,sum(bd_lockage_count),sum(ck_lockage_count),sum(totoal_lockage_count) from tdm_this_year_ship_lockage_type_df where show_type='本年' group by show_type;-->
+<!--        select show_type,lock_name,bd_lockage_count,ck_lockage_count,totoal_lockage_count from tdm_this_year_ship_lockage_type_df where lock_name = #{locakName}-->
     </select>
 </mapper>

@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author ZhangQi
@@ -516,7 +513,12 @@ public class MainScreenController {
     @GetMapping("/capacityWeekIndexByShipLock")
     public String freightWeeklyIndexByShipLock(@RequestParam String shipLock){
         QueryWrapper<TdmXjTransportCapacityWeekRate> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("target","船闸").eq("target_name",shipLock).orderByDesc("year_increase").orderByDesc("week_count").last("limit 0,9");
+        queryWrapper
+                .eq("target","船闸")
+                .eq("target_name",shipLock)
+                .orderByDesc("year_increase")
+                .orderByDesc("week_count")
+                .last("limit 0,9");
         List<TdmXjTransportCapacityWeekRate> tdmXjTransportCapacityWeekRates = tdmXjTransportCapacityWeekRateService.list(queryWrapper);
         try {
             JSONObject jsonObject = new JSONObject();
@@ -683,7 +685,7 @@ public class MainScreenController {
     @ApiOperation(value = "指标-经常过闸船舶",notes = "仅支持get")
     @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
     @GetMapping("/oftenLockageShipCount")
-    public String oftenLockageShipCount(){
+    public String oftenLockageShipCount(@RequestParam(required = false, defaultValue = "all") String lockName){
         List<TdmBeidouOperationDataDf> tdmBeidouOperationDataDfs = tdmBeidouOperationDataDfService.list();
         try {
             JSONObject jsonObject = new JSONObject();
@@ -691,10 +693,33 @@ public class MainScreenController {
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("label","经常过闸船舶");
             for (TdmBeidouOperationDataDf tdmBeidouOperationDataDf : tdmBeidouOperationDataDfs) {
-                jsonObject1.put("value",tdmBeidouOperationDataDf.getOftenLockageShipCount());
-                jsonObject1.put("unit","艘次");
-                //"description": "这是一段说明文字"
-                jsonObject1.put("description","365天内过闸次数不少于12次运力不小于800吨");
+                String lockName1 = tdmBeidouOperationDataDf.getLockName();
+                if (
+                        (lockName.equals("贵港")
+                                || lockName.equals("长洲")
+                                || lockName.equals("大藤峡")
+                                || lockName.equals("桥巩")
+                                || lockName.equals("桂平")
+                                || lockName.equals("金鸡")
+                                || lockName.equals("鱼梁")
+                                || lockName.equals("那吉")
+                                || lockName.equals("邕宁")
+                                || lockName.equals("老口")
+                                || lockName.equals("红花")
+                                || lockName.equals("西津")) && lockName1.equals(lockName)
+                ){
+                    jsonObject1.put("value",tdmBeidouOperationDataDf.getOftenLockageShipCount());
+                    jsonObject1.put("unit","艘次");
+                    //"description": "这是一段说明文字"
+                    jsonObject1.put("description","365天内过闸次数不少于12次运力不小于800吨");
+                }
+                if (lockName.equals("all")){
+                    jsonObject1.put("value",tdmBeidouOperationDataDf.getTotalLockageShipCount());
+                    jsonObject1.put("unit","艘次");
+                    //"description": "这是一段说明文字"
+                    jsonObject1.put("description","365天内过闸次数不少于12次运力不小于800吨");
+                }
+
             }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
@@ -715,17 +740,40 @@ public class MainScreenController {
     @ApiOperation(value = "指标-北斗船舶数",notes = "仅支持get")
     @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
     @GetMapping("/beidouShipAmountDf")
-    public String beidouShipAmountDf(){
+    public String beidouShipAmountDf(@RequestParam(required = false, defaultValue = "all") String lockName){
         List<TdmBeidouShipAmountDf> tdmBeidouShipAmountDfs = tdmBeidouShipAmountDfService.list();
+//        List<TdmBeidouOperationDataDf> tdmBeidouOperationDataDfs = tdmBeidouOperationDataDfService.list();
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("label","北斗船舶");
+
             for (TdmBeidouShipAmountDf tdmBeidouShipAmountDf : tdmBeidouShipAmountDfs) {
-                jsonObject1.put("value",tdmBeidouShipAmountDf.getAmount());
-                jsonObject1.put("unit","艘次");
-                jsonObject1.put("description","已安装北斗船载终端总数");
+                String lockName1 = tdmBeidouShipAmountDf.getLockName();
+                if (
+                        (lockName.equals("贵港")
+                                || lockName.equals("长洲")
+                                || lockName.equals("大藤峡")
+                                || lockName.equals("桥巩")
+                                || lockName.equals("桂平")
+                                || lockName.equals("金鸡")
+                                || lockName.equals("鱼梁")
+                                || lockName.equals("那吉")
+                                || lockName.equals("邕宁")
+                                || lockName.equals("老口")
+                                || lockName.equals("红花")
+                                || lockName.equals("西津")) && lockName1.equals(lockName)
+                ){
+                    jsonObject1.put("value",tdmBeidouShipAmountDf.getAmount());
+                    jsonObject1.put("unit","艘次");
+                    jsonObject1.put("description","已安装北斗船载终端总数");
+                }
+                if (lockName.equals("all")){
+                    jsonObject1.put("value",tdmBeidouShipAmountDf.getVslCdCountTotal());
+                    jsonObject1.put("unit","艘次");
+                    jsonObject1.put("description","已安装北斗船载终端总数");
+                }
             }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
@@ -746,7 +794,7 @@ public class MainScreenController {
     @ApiOperation(value = "经常过闸船舶运力",notes = "仅支持get")
     @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
     @GetMapping("/oftenLockageTransportCapacity")
-    public String oftenLockageTransportCapacity(){
+    public String oftenLockageTransportCapacity(@RequestParam(required = false, defaultValue = "all") String lockName){
         List<TdmBeidouOperationDataDf> tdmBeidouOperationDataDfs = tdmBeidouOperationDataDfService.list();
         try {
             JSONObject jsonObject = new JSONObject();
@@ -754,9 +802,30 @@ public class MainScreenController {
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("label","经常过闸船舶运力");
             for (TdmBeidouOperationDataDf tdmBeidouOperationDataDf : tdmBeidouOperationDataDfs) {
-                jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmBeidouOperationDataDf.getOftenLockageTransportCapacity())/10000,2));
-                jsonObject1.put("unit","万吨");
-                jsonObject1.put("description","365天内过闸次数不少于12次运力不小于800吨的船舶核载数量合计");
+                String lockName1 = tdmBeidouOperationDataDf.getLockName();
+                if (
+                        (lockName.equals("贵港")
+                                || lockName.equals("长洲")
+                                || lockName.equals("大藤峡")
+                                || lockName.equals("桥巩")
+                                || lockName.equals("桂平")
+                                || lockName.equals("金鸡")
+                                || lockName.equals("鱼梁")
+                                || lockName.equals("那吉")
+                                || lockName.equals("邕宁")
+                                || lockName.equals("老口")
+                                || lockName.equals("红花")
+                                || lockName.equals("西津")) && lockName1.equals(lockName)
+                ){
+                    jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmBeidouOperationDataDf.getOftenLockageTransportCapacity())/10000,2));
+                    jsonObject1.put("unit","万吨");
+                    jsonObject1.put("description","365天内过闸次数不少于12次运力不小于800吨的船舶核载数量合计");
+                }
+                if (lockName.equals("all")){
+                    jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmBeidouOperationDataDf.getTotalLockageTransportCapacity())/10000,2));
+                    jsonObject1.put("unit","万吨");
+                    jsonObject1.put("description","365天内过闸次数不少于12次运力不小于800吨的船舶核载数量合计");
+                }
             }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
@@ -779,7 +848,7 @@ public class MainScreenController {
     @ApiOperation(value = "北斗船舶运力",notes = "仅支持get")
     @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
     @GetMapping("/beidouShipShipment")
-    public String beidouShipShipment(){
+    public String beidouShipShipment(@RequestParam(required = false, defaultValue = "all") String lockName){
         List<TdmBeidouShipAmountDf> tdmBeidouShipAmountDfs = tdmBeidouShipAmountDfService.list();
         try {
             JSONObject jsonObject = new JSONObject();
@@ -788,9 +857,31 @@ public class MainScreenController {
             jsonObject1.put("label","北斗船舶运力");
             for (TdmBeidouShipAmountDf tdmBeidouShipAmountDf : tdmBeidouShipAmountDfs) {
 
-                jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmBeidouShipAmountDf.getShipment())/10000,2));
-                jsonObject1.put("unit","万吨");
-                jsonObject1.put("description","已安装北斗船载终端总数的船舶核载数量合计");
+                String lockName1 = tdmBeidouShipAmountDf.getLockName();
+                if (
+                        (lockName.equals("贵港")
+                                || lockName.equals("长洲")
+                                || lockName.equals("大藤峡")
+                                || lockName.equals("桥巩")
+                                || lockName.equals("桂平")
+                                || lockName.equals("金鸡")
+                                || lockName.equals("鱼梁")
+                                || lockName.equals("那吉")
+                                || lockName.equals("邕宁")
+                                || lockName.equals("老口")
+                                || lockName.equals("红花")
+                                || lockName.equals("西津")) && lockName1.equals(lockName)
+                ){
+                    jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmBeidouShipAmountDf.getShipment())/10000,2));
+                    jsonObject1.put("unit","万吨");
+                    jsonObject1.put("description","已安装北斗船载终端总数的船舶核载数量合计");
+                }
+                if (lockName.equals("all")){
+                    jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmBeidouShipAmountDf.getNclsCrryTnsSumTotal())/10000,2));
+                    jsonObject1.put("unit","万吨");
+                    jsonObject1.put("description","已安装北斗船载终端总数的船舶核载数量合计");
+                }
+
             }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
@@ -810,31 +901,62 @@ public class MainScreenController {
     @ApiOperation(value = "本年北斗船舶报闸",notes = "仅支持get")
     @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
     @GetMapping("/thisYearBdLockageCount")
-    public String thisYearBdLockageCount(){
-        TdmThisYearShipLockageTypeDfDTO tdmThisYearShipLockageTypeDfDTO = tdmThisYearShipLockageTypeDfService.getTdmThisYearShipLockageTypeDfDTO();
+    public String thisYearBdLockageCount(@RequestParam(required = false, defaultValue = "all") String lockName){
+//        TdmThisYearShipLockageTypeDfDTO tdmThisYearShipLockageTypeDfDTO = tdmThisYearShipLockageTypeDfService.getTdmThisYearShipLockageTypeDfDTO();
         try {
+            List<TdmThisYearShipLockageTypeDf> tdmThisYearShipLockageTypeDfs = tdmThisYearShipLockageTypeDfService.list();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
             JSONObject jsonObject1 = new JSONObject();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
-            String year = simpleDateFormat.format(new Date());
-            jsonObject1.put("label",year+"年北斗报闸");
-            jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmThisYearShipLockageTypeDfDTO.getBdLockageCount())/10000,2));
-            jsonObject1.put("unit","万次");
-            jsonObject1.put("description",year+"年北斗报闸数量");
-            jsonObject.put("content",jsonObject1);
-            return jsonObject.toString();
-        } catch (JSONException e) {
-             e.printStackTrace();
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("success",false);
-                jsonObject.put("message","数据获取失败");
-            } catch (JSONException jsonException) {
-
+            for (TdmThisYearShipLockageTypeDf tdmThisYearShipLockageTypeDf : tdmThisYearShipLockageTypeDfs) {
+                String lockName1 = tdmThisYearShipLockageTypeDf.getLockName();
+                if (
+                        (lockName.equals("贵港")
+                                || lockName.equals("长洲")
+                                || lockName.equals("大藤峡")
+                                || lockName.equals("桥巩")
+                                || lockName.equals("桂平")
+                                || lockName.equals("金鸡")
+                                || lockName.equals("鱼梁")
+                                || lockName.equals("那吉")
+                                || lockName.equals("邕宁")
+                                || lockName.equals("老口")
+                                || lockName.equals("红花")
+                                || lockName.equals("西津")) && lockName1.equals(lockName)
+                ){
+//                    jsonObject.put("success",true);
+//                    JSONObject jsonObject1 = new JSONObject();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+                    String year = simpleDateFormat.format(new Date());
+                    jsonObject1.put("label",year+"年北斗报闸");
+                    jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmThisYearShipLockageTypeDf.getBdLockageCount())/10000,2));
+                    jsonObject1.put("unit","万次");
+                    jsonObject1.put("description",year+"年北斗报闸数量");
+//                    jsonObject.put("content",jsonObject1);
+                }
+                if (lockName.equals("all")){
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+                    String year = simpleDateFormat.format(new Date());
+                    jsonObject1.put("label",year+"年北斗报闸");
+                    jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmThisYearShipLockageTypeDf.getBdLockageCount())/10000,2));
+                    jsonObject1.put("unit","万次");
+                    jsonObject1.put("description",year+"年北斗报闸数量");
+//                    jsonObject.put("content",jsonObject1);
+                }
             }
-            return jsonObject.toString();
-        }
+                jsonObject.put("content",jsonObject1);
+                return jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("success",false);
+                    jsonObject.put("message","数据获取失败");
+                } catch (JSONException jsonException) {
+
+                }
+                return jsonObject.toString();
+            }
 
     }
 
@@ -842,32 +964,62 @@ public class MainScreenController {
     @ApiOperation(value = "2021年窗口登记",notes = "仅支持get")
     @ApiResponses(@ApiResponse(code = 200,message = "返回json"))
     @GetMapping("/thisYearCkLockageCount")
-    public String thisYearCkLockageCount(){
-        TdmThisYearShipLockageTypeDfDTO tdmThisYearShipLockageTypeDfDTO = tdmThisYearShipLockageTypeDfService.getTdmThisYearShipLockageTypeDfDTO();
+    public String thisYearCkLockageCount(@RequestParam(required = false, defaultValue = "all") String lockName){
+//        TdmThisYearShipLockageTypeDfDTO tdmThisYearShipLockageTypeDfDTO = tdmThisYearShipLockageTypeDfService.getTdmThisYearShipLockageTypeDfDTO();
+        List<TdmThisYearShipLockageTypeDf> tdmThisYearShipLockageTypeDfs = tdmThisYearShipLockageTypeDfService.list();
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
             JSONObject jsonObject1 = new JSONObject();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
-            String year = simpleDateFormat.format(new Date());
-            jsonObject1.put("label",year+"年窗口登记");
-            jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmThisYearShipLockageTypeDfDTO.getCkLockageCount())/10000,2));
-            jsonObject1.put("unit","万次");
-            jsonObject1.put("description",year+"年窗口登记报闸数量");
-            jsonObject.put("content",jsonObject1);
-            return jsonObject.toString();
-        } catch (JSONException e) {
-            // e.printStackTrace();
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("success",false);
-                jsonObject.put("message","数据获取失败");
-            } catch (JSONException jsonException) {
-
+            for (TdmThisYearShipLockageTypeDf tdmThisYearShipLockageTypeDf : tdmThisYearShipLockageTypeDfs) {
+                String lockName1 = tdmThisYearShipLockageTypeDf.getLockName();
+                if (
+                        (lockName.equals("贵港")
+                                || lockName.equals("长洲")
+                                || lockName.equals("大藤峡")
+                                || lockName.equals("桥巩")
+                                || lockName.equals("桂平")
+                                || lockName.equals("金鸡")
+                                || lockName.equals("鱼梁")
+                                || lockName.equals("那吉")
+                                || lockName.equals("邕宁")
+                                || lockName.equals("老口")
+                                || lockName.equals("红花")
+                                || lockName.equals("西津")) && lockName1.equals(lockName)
+                ){
+//                    jsonObject.put("success",true);
+//                    JSONObject jsonObject1 = new JSONObject();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+                    String year = simpleDateFormat.format(new Date());
+                    jsonObject1.put("label",year+"年窗口登记");
+                    jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmThisYearShipLockageTypeDf.getCkLockageCount())/10000,2));
+                    jsonObject1.put("unit","万次");
+                    jsonObject1.put("description",year+"年窗口登记报闸数量");
+//                    jsonObject.put("content",jsonObject1);
+                }
+                if (lockName.equals("all")){
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+                    String year = simpleDateFormat.format(new Date());
+                    jsonObject1.put("label",year+"年窗口登记");
+                    jsonObject1.put("value",NumberUtil.round(Double.parseDouble(tdmThisYearShipLockageTypeDf.getCkLockageCount())/10000,2));
+                    jsonObject1.put("unit","万次");
+                    jsonObject1.put("description",year+"年窗口登记报闸数量");
+//                    jsonObject.put("content",jsonObject1);
+                }
             }
-            return jsonObject.toString();
-        }
+                jsonObject.put("content",jsonObject1);
+                return jsonObject.toString();
+            } catch (JSONException e) {
+                // e.printStackTrace();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("success",false);
+                    jsonObject.put("message","数据获取失败");
+                } catch (JSONException jsonException) {
 
+                }
+                return jsonObject.toString();
+            }
     }
     @ApiOperation(value = "私有方法",tags = "勿动")
     @ApiResponses(@ApiResponse(code = 200,message = "日期"))
@@ -909,21 +1061,55 @@ public class MainScreenController {
     @ApiOperation(value = "上周运力指数",notes = "上周运力指数")
     @ApiResponses(@ApiResponse(code = 200,message = "上周运力指数"))
     @GetMapping("/lastWeekCapacityRate")
-    public String lastWeekCapacityRate(){
+    public String lastWeekCapacityRate(@RequestParam(required = false, defaultValue = "all") String lockName){
         try {
-            TdmLastWeekCapacityFreightRate tdmLastWeekCapacityFreightRate = tdmLastWeekCapacityFreightRateService.getOne(null);
+//            TdmLastWeekCapacityFreightRate tdmLastWeekCapacityFreightRate = tdmLastWeekCapacityFreightRateService.getOne(null);
+            List<TdmLastWeekCapacityFreightRate> tdmLastWeekCapacityFreightRates = tdmLastWeekCapacityFreightRateService.list();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("label","上周运力指数");
-            jsonObject1.put("value",tdmLastWeekCapacityFreightRate.getLastWeekCapacityRate());
-            jsonObject1.put("unit","");
-            Date monday = getLastWeekMonday(new Date());
-            Date sunday = getLastWeekSunday(new Date());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
-            String mondayString = simpleDateFormat.format(monday);
-            String sundayString = simpleDateFormat.format(sunday);
-            jsonObject1.put("description","上周（"+mondayString+"-"+sundayString+"）运力指数");
+            for (TdmLastWeekCapacityFreightRate tdmLastWeekCapacityFreightRate : tdmLastWeekCapacityFreightRates) {
+                // 获取lockname
+                String lockName1 = tdmLastWeekCapacityFreightRate.getLockName();
+                if (
+                        (lockName.equals("贵港")
+                                || lockName.equals("长洲")
+                                || lockName.equals("大藤峡")
+                                || lockName.equals("桥巩")
+                                || lockName.equals("桂平")
+                                || lockName.equals("金鸡")
+                                || lockName.equals("鱼梁")
+                                || lockName.equals("那吉")
+                                || lockName.equals("邕宁")
+                                || lockName.equals("老口")
+                                || lockName.equals("红花")
+                                || lockName.equals("西津")) && lockName1.equals(lockName)
+                ){
+//                    jsonObject.put("success",true);
+//                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("label","上周运力指数");
+                    jsonObject1.put("value",tdmLastWeekCapacityFreightRate.getLastWeekCapacityRate());
+                    jsonObject1.put("unit","");
+                    Date monday = getLastWeekMonday(new Date());
+                    Date sunday = getLastWeekSunday(new Date());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                    String mondayString = simpleDateFormat.format(monday);
+                    String sundayString = simpleDateFormat.format(sunday);
+                    jsonObject1.put("description","上周（"+mondayString+"-"+sundayString+"）运力指数");
+//
+                }
+                if (lockName.equals("all")){
+                    jsonObject1.put("label","上周运力指数");
+                    jsonObject1.put("value",tdmLastWeekCapacityFreightRate.getLastWeekCapacityRate());
+                    jsonObject1.put("unit","");
+                    Date monday = getLastWeekMonday(new Date());
+                    Date sunday = getLastWeekSunday(new Date());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                    String mondayString = simpleDateFormat.format(monday);
+                    String sundayString = simpleDateFormat.format(sunday);
+                    jsonObject1.put("description","上周（"+mondayString+"-"+sundayString+"）运力指数");
+                }
+            }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
         } catch (JSONException e) {
@@ -944,23 +1130,60 @@ public class MainScreenController {
     @ApiOperation(value = "上周货运指数",notes = "上周货运指数")
     @ApiResponses(@ApiResponse(code = 200,message = "上周货运指数"))
     @GetMapping("/lastWeekFreightRate")
-    public String lastWeekFreightRate(){
+    public String lastWeekFreightRate(@RequestParam(required = false, defaultValue = "all") String lockName){
         try {
-            TdmLastWeekCapacityFreightRate tdmLastWeekCapacityFreightRate = tdmLastWeekCapacityFreightRateService.getOne(null);
+//            TdmLastWeekCapacityFreightRate tdmLastWeekCapacityFreightRate = tdmLastWeekCapacityFreightRateService.getOne(null);
+            List<TdmLastWeekCapacityFreightRate> tdmLastWeekCapacityFreightRates = tdmLastWeekCapacityFreightRateService.list();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success",true);
             JSONObject jsonObject1 = new JSONObject();
-            jsonObject1.put("label","上周货运指数");
-            jsonObject1.put("value",tdmLastWeekCapacityFreightRate.getLastWeekFreightRate());
-            jsonObject1.put("unit","");
-            Date monday = getLastWeekMonday(new Date());
-            Date sunday = getLastWeekSunday(new Date());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
-            String mondayString = simpleDateFormat.format(monday);
-            String sundayString = simpleDateFormat.format(sunday);
-            jsonObject1.put("description","上周（"+mondayString+"-"+sundayString+"）货运指数");
+            for (TdmLastWeekCapacityFreightRate tdmLastWeekCapacityFreightRate : tdmLastWeekCapacityFreightRates) {
+                String lockName1 = tdmLastWeekCapacityFreightRate.getLockName();
+//                JSONObject jsonObject = new JSONObject();
+                if (
+                        (lockName.equals("贵港")
+                                || lockName.equals("长洲")
+                                || lockName.equals("大藤峡")
+                                || lockName.equals("桥巩")
+                                || lockName.equals("桂平")
+                                || lockName.equals("金鸡")
+                                || lockName.equals("鱼梁")
+                                || lockName.equals("那吉")
+                                || lockName.equals("邕宁")
+                                || lockName.equals("老口")
+                                || lockName.equals("红花")
+                                || lockName.equals("西津")) && lockName1.equals(lockName)
+                ){
+//                JSONObject jsonObject = new JSONObject();
+//                    jsonObject.put("success",true);
+//                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("label","上周货运指数");
+                    jsonObject1.put("value",tdmLastWeekCapacityFreightRate.getLastWeekFreightRate());
+                    jsonObject1.put("unit","");
+                    Date monday = getLastWeekMonday(new Date());
+                    Date sunday = getLastWeekSunday(new Date());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                    String mondayString = simpleDateFormat.format(monday);
+                    String sundayString = simpleDateFormat.format(sunday);
+                    jsonObject1.put("description","上周（"+mondayString+"-"+sundayString+"）货运指数");
+//                    jsonObject.put("content",jsonObject1);
+                }
+                if (lockName.equals("all")){
+                    jsonObject1.put("label","上周货运指数");
+                    jsonObject1.put("value",tdmLastWeekCapacityFreightRate.getLastWeekFreightRate());
+                    jsonObject1.put("unit","");
+                    Date monday = getLastWeekMonday(new Date());
+                    Date sunday = getLastWeekSunday(new Date());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                    String mondayString = simpleDateFormat.format(monday);
+                    String sundayString = simpleDateFormat.format(sunday);
+                    jsonObject1.put("description","上周（"+mondayString+"-"+sundayString+"）货运指数");
+                }
+
+            }
             jsonObject.put("content",jsonObject1);
             return jsonObject.toString();
+
         } catch (JSONException e) {
             // e.printStackTrace();
             JSONObject jsonObject = new JSONObject();
@@ -1140,12 +1363,39 @@ public class MainScreenController {
             jsonArray1.put("船闸");
             jsonArray1.put("上年同期");
             jsonArray1.put("今年同期");
+
+            // 新增最大值、最小值
+            jsonArray1.put("最大值");
+            jsonArray1.put("最小值");
             jsonArray.put(jsonArray1);
+
+            // 获取所以值封装到list
+            ArrayList<String> maxAndMin = new ArrayList<>();
+            for (int i = 0; i < nowAndPast.size(); i++) {
+                maxAndMin.add(nowAndPast.get(i).getNowTonnage());
+                maxAndMin.add(nowAndPast.get(i).getPastTonnage());
+            }
+
+            // 获取最大最小值
+            Double max = Double.parseDouble(maxAndMin.get(0));
+            Double min = Double.parseDouble(maxAndMin.get(0));
+            for (int i = 0; i < maxAndMin.size(); i++) {
+                if (Double.parseDouble(maxAndMin.get(i)) > max){
+                    max = Double.parseDouble(maxAndMin.get(i));
+                }
+                if (Double.parseDouble(maxAndMin.get(i)) < min){
+                    min = Double.parseDouble(maxAndMin.get(i));
+                }
+            }
+
             for (TdmXjLockageInfoDTO tdmXjLockageInfoDTO : nowAndPast) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmXjLockageInfoDTO.getSnid());
                 jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmXjLockageInfoDTO.getPastTonnage()==null?"0":tdmXjLockageInfoDTO.getPastTonnage())/10000,2));
                 jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmXjLockageInfoDTO.getNowTonnage()==null?"0":tdmXjLockageInfoDTO.getNowTonnage())/10000,2));
+
+                jsonArray2.put(NumberUtil.round(max/10000, 2));
+                jsonArray2.put(NumberUtil.round(min/10000, 2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -1335,12 +1585,40 @@ public class MainScreenController {
             jsonArray1.put("船闸");
             jsonArray1.put("上年同期");
             jsonArray1.put("今年同期");
+
+            // 增加最大值、最小值
+            jsonArray1.put("最大值");
+            jsonArray1.put("最小值");
             jsonArray.put(jsonArray1);
+
+            // 获取所有值封装到list
+            ArrayList<String> maxAndMin = new ArrayList<>();
+            for (int i = 0; i < nowAndPast.size(); i++) {
+                maxAndMin.add(nowAndPast.get(i).getPastActFeePd());
+                maxAndMin.add(nowAndPast.get(i).getNowActFeePd());
+            }
+
+            // 获取最大值、最小值
+            Double max = Double.parseDouble(maxAndMin.get(0));
+            Double min = Double.parseDouble(maxAndMin.get(0));
+
+            for (int i = 0; i < maxAndMin.size(); i++) {
+                if (Double.parseDouble(maxAndMin.get(i)) > max){
+                    max = Double.parseDouble(maxAndMin.get(i));
+                }
+                if (Double.parseDouble(maxAndMin.get(i)) < min){
+                    min = Double.parseDouble(maxAndMin.get(i));
+                }
+            }
+
             for (TdmXjLockageInfoDTO tdmXjLockageInfoDTO : nowAndPast) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmXjLockageInfoDTO.getSnid());
                 jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmXjLockageInfoDTO.getPastActFeePd()==null?"0":tdmXjLockageInfoDTO.getPastActFeePd())/10000,2));
                 jsonArray2.put(NumberUtil.round(Double.parseDouble(tdmXjLockageInfoDTO.getNowActFeePd()==null?"0":tdmXjLockageInfoDTO.getNowActFeePd())/10000,2));
+
+                jsonArray2.put(NumberUtil.round(max/10000, 2));
+                jsonArray2.put(NumberUtil.round(min/10000, 2));
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);

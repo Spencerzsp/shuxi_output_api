@@ -20,12 +20,27 @@ public class TdmBeidouShipAmountDf implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 北斗船舶数量
+     * 北斗传播数量 vsl_cd_count_total
+     */
+    private String vslCdCountTotal;
+
+    /**
+     * 北斗传播运力 ncls_crry_tns_sum_total
+     */
+    private String nclsCrryTnsSumTotal;
+
+    /**
+     * 船闸
+     */
+    private String lockName;
+
+    /**
+     * 单个船闸北斗船舶数量
      */
     private String amount;
 
     /**
-     * 北斗船舶运力
+     * 单个船闸北斗船舶运力
      */
     private String shipment;
 

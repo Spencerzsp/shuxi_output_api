@@ -20,6 +20,10 @@ public class TdmVoyageSheet implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 航向
+     */
+    private String cursCd;
+    /**
      * 出发地
      */
     private String dprtPt;

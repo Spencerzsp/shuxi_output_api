@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -813,11 +815,43 @@ public class SecondScreenController {
             jsonArray1.put("调度中船舶数量");
             jsonArray1.put("排队中船舶数量");
             jsonArray.put(jsonArray1);
+
+            // 12个船闸封装到list
+            List<String> ship_locks = Arrays.asList(
+                    "GG"
+                    , "CZ"
+                    , "DTX"
+                    , "QG"
+                    , "GP"
+                    , "JJ"
+                    , "YL"
+                    , "NJ"
+                    , "YN"
+                    , "LK"
+                    , "HH"
+                    , "XJ"
+            );
+            ArrayList<String> snidList = new ArrayList<>();
+            for (TdmEachShiplockLockageDf tdmEachShiplockLockageDf : tdmEachShiplockLockageDfs) {
+                snidList.add(tdmEachShiplockLockageDf.getSnid());
+            }
+
+            // 判断如果不在12个船闸中的话就全部补0
+            for (String ship_lock : ship_locks) {
+                if (!snidList.contains(ship_lock)){
+                    JSONArray jsonArray2 = new JSONArray();
+                    jsonArray2.put(ship_lock);
+                    jsonArray2.put("0");
+                    jsonArray2.put("0");
+                    jsonArray.put(jsonArray2);
+                }
+            }
+
             for (TdmEachShiplockLockageDf tdmEachShiplockLockageDf : tdmEachShiplockLockageDfs) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmEachShiplockLockageDf.getSnid());
-                jsonArray2.put(tdmEachShiplockLockageDf.getSchedulingShipCount());
-                jsonArray2.put(tdmEachShiplockLockageDf.getQueuingShipCount());
+                jsonArray2.put(tdmEachShiplockLockageDf.getSchedulingShipCount()== null ? "0" : tdmEachShiplockLockageDf.getSchedulingShipCount());
+                jsonArray2.put(tdmEachShiplockLockageDf.getQueuingShipCount() == null ? "0" : tdmEachShiplockLockageDf.getQueuingShipCount());
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);

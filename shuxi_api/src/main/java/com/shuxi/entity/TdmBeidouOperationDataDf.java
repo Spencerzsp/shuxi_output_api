@@ -20,6 +20,11 @@ public class TdmBeidouOperationDataDf implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 闸位名称
+     */
+    private String lockName;
+
+    /**
      * 总艘数
      */
     private String totalShipCount;

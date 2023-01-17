@@ -299,12 +299,39 @@ public class ThirdScreenController {
             jsonArray1.put("年月");
             jsonArray1.put("上行货物");
             jsonArray1.put("下行货物");
+
+            // 新增最大值、最小值
+            jsonArray1.put("最大值");
+            jsonArray1.put("最小值");
             jsonArray.put(jsonArray1);
+
+            // 获取上行、下行封装到List
+            ArrayList<String> maxAndMin = new ArrayList<>();
+            for (int i = 0; i < tdmPastYearLokageBasinGoodsDfDTOS.size(); i++) {
+                maxAndMin.add(tdmPastYearLokageBasinGoodsDfDTOS.get(i).getUpCrgDdwghtTns());
+                maxAndMin.add(tdmPastYearLokageBasinGoodsDfDTOS.get(i).getDownCrgDdwghtTns());
+            }
+            // 获取最大最小值
+            Double max = Double.parseDouble(maxAndMin.get(0));
+            Double min = Double.parseDouble(maxAndMin.get(0));
+            for (int i = 0; i < maxAndMin.size(); i++) {
+                if (Double.parseDouble(maxAndMin.get(i)) > max){
+                    max = Double.parseDouble(maxAndMin.get(i));
+                }
+                if (Double.parseDouble(maxAndMin.get(i)) < min){
+                    min = Double.parseDouble(maxAndMin.get(i));
+                }
+            }
+
             for (TdmPastYearLokageBasinGoodsDfDTO tdmPastYearLokageBasinGoodsDfDTO : tdmPastYearLokageBasinGoodsDfDTOS) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmPastYearLokageBasinGoodsDfDTO.getFzDate());
                 jsonArray2.put(tdmPastYearLokageBasinGoodsDfDTO.getUpCrgDdwghtTns());
                 jsonArray2.put(tdmPastYearLokageBasinGoodsDfDTO.getDownCrgDdwghtTns());
+
+                // 拼接最大值最小值
+                jsonArray2.put(max.toString());
+                jsonArray2.put(min.toString());
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -342,15 +369,47 @@ public class ThirdScreenController {
             jsonArray1.put("年月");
             jsonArray1.put("上行货物");
             jsonArray1.put("下行货物");
+            // 新增最大值、最小值
+            jsonArray1.put("最大值");
+            jsonArray1.put("最小值");
+
             jsonArray.put(jsonArray1);
+
+            // 获取上行、下行封装到List
+            ArrayList<String> maxAndMin = new ArrayList<>();
+            for (int i = 0; i < tdmPastYearLokageBasinGoodsDfDTOS.size(); i++) {
+                maxAndMin.add(tdmPastYearLokageBasinGoodsDfDTOS.get(i).getUpCrgDdwghtTns());
+                maxAndMin.add(tdmPastYearLokageBasinGoodsDfDTOS.get(i).getDownCrgDdwghtTns());
+            }
+
+            // 获取最大最小值
+            Double max = Double.parseDouble(maxAndMin.get(0));
+            Double min = Double.parseDouble(maxAndMin.get(0));
+            for (int i = 0; i < maxAndMin.size(); i++) {
+                if (Double.parseDouble(maxAndMin.get(i)) > max){
+                    max = Double.parseDouble(maxAndMin.get(i));
+                }
+                if (Double.parseDouble(maxAndMin.get(i)) < min){
+                    min = Double.parseDouble(maxAndMin.get(i));
+                }
+            }
+
             for (TdmPastYearLokageBasinGoodsDfDTO tdmPastYearLokageBasinGoodsDfDTO : tdmPastYearLokageBasinGoodsDfDTOS) {
+
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmPastYearLokageBasinGoodsDfDTO.getFzDate());
                 jsonArray2.put(tdmPastYearLokageBasinGoodsDfDTO.getUpCrgDdwghtTns());
                 jsonArray2.put(tdmPastYearLokageBasinGoodsDfDTO.getDownCrgDdwghtTns());
+
+                // 每行新增最大、最小值
+                jsonArray2.put(max.toString());
+                jsonArray2.put(min.toString());
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
+
+            // 增加最大/最小值
+
             return jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -385,12 +444,40 @@ public class ThirdScreenController {
             jsonArray1.put("年月");
             jsonArray1.put("上行货物");
             jsonArray1.put("下行货物");
+
+            // 新增最大值、最小值
+            jsonArray1.put("最大值");
+            jsonArray1.put("最小值");
             jsonArray.put(jsonArray1);
+
+            // 获取上行、下行封装到List
+            ArrayList<String> maxAndMin = new ArrayList<>();
+            for (int i = 0; i < tdmPastYearLokageBasinGoodsIncrementDfDTOS.size(); i++) {
+                maxAndMin.add(tdmPastYearLokageBasinGoodsIncrementDfDTOS.get(i).getUpYearChange());
+                maxAndMin.add(tdmPastYearLokageBasinGoodsIncrementDfDTOS.get(i).getDownYearChange());
+            }
+
+            // 获取最大最小值
+            Double max = Double.parseDouble(maxAndMin.get(0));
+            Double min = Double.parseDouble(maxAndMin.get(0));
+            for (int i = 0; i < maxAndMin.size(); i++) {
+                if (Double.parseDouble(maxAndMin.get(i)) > max){
+                    max = Double.parseDouble(maxAndMin.get(i));
+                }
+                if (Double.parseDouble(maxAndMin.get(i)) < min){
+                    min = Double.parseDouble(maxAndMin.get(i));
+                }
+            }
+
             for (TdmPastYearLokageBasinGoodsIncrementDfDTO tdmPastYearLokageBasinGoodsIncrementDfDTO : tdmPastYearLokageBasinGoodsIncrementDfDTOS) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getFzDate());
                 jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getUpYearChange());
                 jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getDownYearChange());
+
+                // 拼接最大值、最小值
+                jsonArray2.put(max);
+                jsonArray2.put(min);
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
@@ -427,12 +514,41 @@ public class ThirdScreenController {
             jsonArray1.put("年月");
             jsonArray1.put("上行货物");
             jsonArray1.put("下行货物");
+
+            // 新增最大值、最小值
+            jsonArray1.put("最大值");
+            jsonArray1.put("最小值");
+
             jsonArray.put(jsonArray1);
+
+            // 获取上行、下行封装到List
+            ArrayList<String> maxAndMin = new ArrayList<>();
+            for (int i = 0; i < tdmPastYearLokageBasinGoodsIncrementDfDTOS.size(); i++) {
+                maxAndMin.add(tdmPastYearLokageBasinGoodsIncrementDfDTOS.get(i).getUpYearChange());
+                maxAndMin.add(tdmPastYearLokageBasinGoodsIncrementDfDTOS.get(i).getDownYearChange());
+            }
+
+            // 获取最大最小值
+            Double max = Double.parseDouble(maxAndMin.get(0));
+            Double min = Double.parseDouble(maxAndMin.get(0));
+            for (int i = 0; i < maxAndMin.size(); i++) {
+                if (Double.parseDouble(maxAndMin.get(i)) > max){
+                    max = Double.parseDouble(maxAndMin.get(i));
+                }
+                if (Double.parseDouble(maxAndMin.get(i)) < min){
+                    min = Double.parseDouble(maxAndMin.get(i));
+                }
+            }
+
             for (TdmPastYearLokageBasinGoodsIncrementDfDTO tdmPastYearLokageBasinGoodsIncrementDfDTO : tdmPastYearLokageBasinGoodsIncrementDfDTOS) {
                 JSONArray jsonArray2 = new JSONArray();
                 jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getFzDate());
                 jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getUpYearChange());
                 jsonArray2.put(tdmPastYearLokageBasinGoodsIncrementDfDTO.getDownYearChange());
+
+                // 拼接最大值最小值到每行
+                jsonArray2.put(max.toString());
+                jsonArray2.put(min.toString());
                 jsonArray.put(jsonArray2);
             }
             jsonObject.put("content",jsonArray);
